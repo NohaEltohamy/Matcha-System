@@ -133,3 +133,47 @@ class ForgotPasswordView(APIView):
         "errors": []
     })
         
+class ResetPasswordView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        uid = serializer.validated_data['uid']
+        token = serializer.validated_data['token']
+        new_password = serializer.validated_data['new_password']
+
+        try:
+            user_id = force_str(urlsafe_base64_decode(uid))
+            user = get_user_model().objects.get(pk=user_id)
+        except Exception:
+            # Generic response to avoid leaking info
+            return 
+            Response(data={
+        "success": True,
+        "message": "Password reset successful.",
+        "data": [],
+        "errors": []
+    })
+
+        if PasswordResetTokenGenerator().check_token(user, token):
+            user.set_password(new_password)
+            user.save()
+            return 
+            Response(data={
+        "success": True,
+        "message": "Password reset successful.",
+        "data": [],
+        "errors": []
+    })
+    
+
+        # Generic response even on invalid token
+        return Response(data={
+        "success": True,
+        "message": "Password reset successful.",
+        "data": [],
+        "errors": []
+    })
+    
