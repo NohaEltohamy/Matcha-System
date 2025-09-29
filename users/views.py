@@ -13,6 +13,16 @@ from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .services import send_password_reset_email
+import json
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
+from django.conf import settings
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from google.oauth2 import id_token as google_id_token
+from google.auth.transport import requests as google_requests
+from .serializers import GoogleLoginSerializer
+
 
 # Create your views here.
 # from django.http import HttpResponse
@@ -126,12 +136,12 @@ class ForgotPasswordView(APIView):
             send_password_reset_email(email)
         # Always return generic success
         return 
-         Response(data={
-        "success": True,
-        "message": "If this email exists, a password reset link has been sent.",
-        "data": [],
-        "errors": []
-    })
+                Response(data={
+                "success": True,
+                "message": "If this email exists, a password reset link has been sent.",
+                "data": [],
+                "errors": []
+            })
         
 class ResetPasswordView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -151,29 +161,123 @@ class ResetPasswordView(APIView):
             # Generic response to avoid leaking info
             return 
             Response(data={
-        "success": True,
-        "message": "Password reset successful.",
-        "data": [],
-        "errors": []
-    })
+                "success": True,
+                "message": "Password reset successful.",
+                "data": [],
+                "errors": []
+            })
 
         if PasswordResetTokenGenerator().check_token(user, token):
             user.set_password(new_password)
             user.save()
             return 
-            Response(data={
-        "success": True,
-        "message": "Password reset successful.",
-        "data": [],
-        "errors": []
-    })
+             Response(data={
+                "success": True,
+                "message": "Password reset successful.",
+                "data": [],
+                "errors": []
+            })
     
 
         # Generic response even on invalid token
         return Response(data={
-        "success": True,
-        "message": "Password reset successful.",
-        "data": [],
-        "errors": []
-    })
+                "success": True,
+                "message": "Password reset successful.",
+                "data": [],
+                "errors": []
+            })
     
+
+
+
+class GoogleLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = GoogleLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        id_tok = serializer.validated_data.get('id_token')
+        access_tok = serializer.validated_data.get('access_token')
+
+        payload = None
+
+        if id_tok:
+            # Verify ID token signature and audience
+            try:
+                payload = google_id_token.verify_oauth2_token(
+                    id_tok,
+                    google_requests.Request(),
+                    settings.GOOGLE_CLIENT_ID or None
+                )
+            except Exception:
+                return Response(data={
+                    "success": True,
+                    "message": "Invalid Google token.",
+                    "data": [],
+                    "errors": []
+                })
+               
+        else:
+            # Fallback: validate access token by calling Google UserInfo endpoint
+            try:
+                req = Request(
+                    'https://www.googleapis.com/oauth2/v3/userinfo',
+                    headers={'Authorization': f'Bearer {access_tok}'}
+                )
+                with urlopen(req, timeout=10) as resp:
+                    payload = json.loads(resp.read().decode('utf-8'))
+            except (HTTPError, URLError, ValueError):
+                return Response(data={
+                    "success": True,
+                    "message": "Invalid Google token.",
+                    "data": [],
+                    "errors": []
+                })
+                
+
+        # Normalize fields from either payload shape (ID token vs userinfo)
+        email = payload.get('email')
+        email_verified = payload.get('email_verified', False)
+        name = payload.get('name') or payload.get('given_name') or ''
+        picture = payload.get('picture')
+
+        if not email or not email_verified:
+            return Response(data={
+                    "success": True,
+                    "message": "Email not verified with Google.",
+                    "data": [],
+                    "errors": []
+                })
+            
+
+        UserModel = get_user_model()
+        try:
+            user = UserModel.objects.get(email__iexact=email)
+        except UserModel.DoesNotExist:
+            user = UserModel.objects.create_user(
+                email=email,
+                password=None,
+                name=name or email.split('@')[0],
+                avatar=picture
+            )
+            # Optionally mark as verified
+            if hasattr(user, 'is_verified'):
+                user.is_verified = True
+                user.save(update_fields=['is_verified'])
+
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response(data={
+                    "success": True,
+                    "message": "Google login successful.",
+                    "data": {
+            "token": token.key,
+            "user": {
+                "id": str(user.pk),
+                "name": user.name,
+                "email": user.email,
+                "avatar": getattr(user, 'avatar', None),
+            },
+                    "errors": []
+                })
+        
+        
