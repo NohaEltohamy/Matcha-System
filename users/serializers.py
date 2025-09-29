@@ -71,3 +71,11 @@ class LoginSerializer(serializers.Serializer):
         attrs['by_email'] = bool(email)
         attrs['password'] = password
         return attrs
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True, validators=[validate_password])
