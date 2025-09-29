@@ -8,7 +8,11 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User
-from .serializers import UserRegistrationSerializer, UserSerializer, LoginSerializer  # ← Import from same app
+from .serializers import UserRegistrationSerializer, UserSerializer, LoginSerializer, ForgotPasswordSerializer, ResetPasswordSerializer  # ← Import from same app
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from .services import send_password_reset_email
 
 # Create your views here.
 # from django.http import HttpResponse
@@ -112,3 +116,20 @@ class LogoutView(APIView):
     })
         
 
+class ForgotPasswordView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            send_password_reset_email(email)
+        # Always return generic success
+        return 
+         Response(data={
+        "success": True,
+        "message": "If this email exists, a password reset link has been sent.",
+        "data": [],
+        "errors": []
+    })
+        
