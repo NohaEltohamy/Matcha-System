@@ -8,4 +8,8 @@ urlpatterns = [
     # path('verify-email/', views.verify_email, name='verify-email'),
     # path('resend-verification/', views.resend_verification_email, name='resend-verification'),
 
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
+  
+
 ]
