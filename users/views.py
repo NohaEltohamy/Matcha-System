@@ -72,7 +72,7 @@ class LoginView(APIView):
             user = authenticate(request, username=login_identifier, password=password)
 
         if not user:
-            return Response(data{
+            return Response(data={
         "success": True,
         "message": "Invalid credentials.",
         "data": [],
@@ -81,7 +81,7 @@ class LoginView(APIView):
             
 
         if not user.is_active:
-            return Response(data{
+            return Response(data={
         "success": True,
         "message": "User is disabled.",
         "data": [],
@@ -90,7 +90,7 @@ class LoginView(APIView):
            
 
         login(request, user)
-        return Response(data{
+        return Response(data={
         "success": True,
         "message": "Login successful",
         "data": UserSerializer(user).data,
