@@ -2,6 +2,10 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import User, EmailVerificationToken
 import re
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password])
@@ -50,3 +54,20 @@ class UserSerializer(serializers.ModelSerializer):
 # For email verification endpoint
 class EmailVerificationSerializer(serializers.Serializer):
     token = serializers.UUIDField()
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=False, allow_blank=True)
+    email = serializers.EmailField(required=False, allow_blank=True)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        email = attrs.get('email', '').strip()
+        password = attrs.get('password')
+
+        if not email:
+            raise serializers.ValidationError('Provide either username or email.')
+
+        attrs['login_identifier'] =  email
+        attrs['by_email'] = bool(email)
+        attrs['password'] = password
+        return attrs
