@@ -1,0 +1,7 @@
+#Login
+curl -i -c cookies.txt -H "Content-Type: application/json" -X POST \
+  -d '{"username":"alice","password":"secret"}' \
+  http://127.0.0.1:8000/api/auth/login/
+
+#logout
+curl -i -b cookies.txt -X POST http://127.0.0.1:8000/api/auth/logout/
