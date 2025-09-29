@@ -141,3 +141,13 @@ DATABASES['default']['CONN_MAX_AGE'] = 500  # Persistent connections
 DATABASES['default']['OPTIONS'] = {
     'connect_timeout': 5,
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
