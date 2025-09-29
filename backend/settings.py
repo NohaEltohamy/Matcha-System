@@ -161,3 +161,5 @@ EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.Em
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'no-reply@example.com')
 # Expire password reset tokens after 1 hour
 PASSWORD_RESET_TIMEOUT = 3600
+# Google client ID
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
