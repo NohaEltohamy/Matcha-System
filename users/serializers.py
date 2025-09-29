@@ -79,3 +79,18 @@ class ResetPasswordSerializer(serializers.Serializer):
     uid = serializers.CharField()
     token = serializers.CharField()
     new_password = serializers.CharField(write_only=True, validators=[validate_password])
+
+
+# append to /home/jboles/Desktop/task/users/serializers.py
+class GoogleLoginSerializer(serializers.Serializer):
+    id_token = serializers.CharField(required=False, allow_blank=True)
+    access_token = serializers.CharField(required=False, allow_blank=True)
+
+    def validate(self, attrs):
+        id_token = attrs.get('id_token', '').strip()
+        access_token = attrs.get('access_token', '').strip()
+        if not id_token and not access_token:
+            raise serializers.ValidationError("Provide either id_token or access_token.")
+        attrs['id_token'] = id_token
+        attrs['access_token'] = access_token
+        return attrs
