@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Demo - Matcha AI</title>
+    <meta name="description" content="Experience AI interviews in action. See how our AI conducts real-time interviews, analyzes candidates, and provides detailed evaluations.">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23598F4E'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z'/></svg>">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/demo.css">
+    
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">
+                    <i data-lucide="bot"></i>
+                    <span>Matcha AI</span>
+                </a>
+
+                <div class="nav-links desktop-only">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="features.html" class="nav-link">Features</a>
+                    <a href="demo.html" class="nav-link active">Demo</a>
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="pricing.html" class="nav-link">Pricing</a>
+                    <a href="about.html" class="nav-link">About</a>
+                </div>
+
+                <div class="nav-cta desktop-only">
+                    <a href="login.html" class="btn btn-ghost">Login</a>
+                    <a href="demo.html" class="btn btn-hero">Try Demo</a>
+                </div>
+
+                <button class="mobile-menu-btn mobile-only" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" id="menu-icon"></i>
+                    <i data-lucide="x" id="close-icon" style="display: none;"></i>
+                </button>
+            </div>
+
+            <div class="mobile-nav" id="mobile-nav">
+                <div class="mobile-nav-links">
+                    <a href="index.html" class="mobile-nav-link">Home</a>
+                    <a href="features.html" class="mobile-nav-link">Features</a>
+                    <a href="demo.html" class="mobile-nav-link">Demo</a>
+                    <a href="dashboard.html" class="mobile-nav-link">Dashboard</a>
+                    <a href="pricing.html" class="mobile-nav-link">Pricing</a>
+                    <a href="about.html" class="mobile-nav-link">About</a>
+                </div>
+                <div class="mobile-nav-cta">
+                    <a href="login.html" class="btn btn-ghost full-width">Login</a>
+                    <a href="demo.html" class="btn btn-hero full-width">Try Demo</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="demo-hero bg-hero">
+        <div class="container">
+            <div class="demo-hero-content">
+                <div class="badge">🎬 Interactive Demo</div>
+                <h1 class="demo-title">
+                    Experience AI Interviews
+                    <br>
+                    <span class="text-light">In Action</span>
+                </h1>
+                <p class="demo-description">
+                    See how our AI conducts real-time interviews, analyzes candidates, 
+                    and provides detailed evaluations. Try our interactive demo below.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Interface -->
+    <section class="demo-section">
+        <div class="container">
+            <div class="demo-interface">
+                
+                <!-- Main Interview Panel -->
+                <div class="interview-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i data-lucide="video"></i>
+                            <span>AI Interview Session</span>
+                        </div>
+                        <div class="status-badge" id="status-badge">Ready</div>
+                    </div>
+                    
+                    <!-- Video Panel -->
+                    <div class="video-panel">
+                        <div class="participants">
+                            <!-- AI Interviewer -->
+                            <div class="participant">
+                                <div class="avatar">
+                                    <img src="assets/ai-interviewer.jpg" alt="AI Interviewer">
+                                </div>
+                                <div class="participant-info">
+                                    <div class="name">AI Interviewer</div>
+                                    <div class="status">
+                                        <div class="indicator" id="ai-indicator"></div>
+                                        <span id="ai-status">Ready</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Candidate -->
+                            <div class="participant">
+                                <div class="avatar candidate-avatar">
+                                    <i data-lucide="user"></i>
+                                </div>
+                                <div class="participant-info">
+                                    <div class="name">Candidate</div>
+                                    <div class="status">
+                                        <div class="indicator" id="candidate-indicator"></div>
+                                        <span id="candidate-status">Listening</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recording indicator -->
+                        <div class="recording-indicator" id="recording-indicator" style="display: none;">
+                            <div class="rec-dot"></div>
+                            <span>REC</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Current Question -->
+                    <div class="question-panel" id="question-panel">
+                        <div class="question-header">
+                            <i data-lucide="message-circle"></i>
+                            <span id="question-counter">Question 1 of 4</span>
+                        </div>
+                        <p class="question-text" id="question-text">
+                            Tell me about yourself and your background in software development.
+                        </p>
+                        <div class="question-type" id="question-type">behavioral</div>
+                    </div>
+                    
+                    <!-- Controls -->
+                    <div class="demo-controls">
+                        <button class="btn btn-hero" id="start-btn" onclick="startInterview()">
+                            <i data-lucide="play"></i>
+                            Start Interview
+                        </button>
+                        <button class="btn btn-outline" id="pause-btn" onclick="pauseInterview()" disabled>
+                            <i data-lucide="pause"></i>
+                        </button>
+                        <button class="btn btn-outline" id="reset-btn" onclick="resetInterview()">
+                            <i data-lucide="rotate-ccw"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Progress -->
+                    <div class="progress-section" id="progress-section">
+                        <div class="progress-header">
+                            <span>Progress</span>
+                            <span id="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side Panel -->
+                <div class="side-panel">
+                    
+                    <!-- Real-time Analysis -->
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <i data-lucide="brain"></i>
+                            <span>Real-time Analysis</span>
+                        </div>
+                        <div class="analysis-metrics">
+                            <div class="metric">
+                                <span>Confidence Level</span>
+                                <span id="confidence-level">0%</span>
+                            </div>
+                            <div class="metric">
+                                <span>Engagement Score</span>
+                                <span id="engagement-score">0%</span>
+                            </div>
+                            <div class="metric">
+                                <span>Communication</span>
+                                <span id="communication-score">0%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-status" id="analysis-status" style="display: none;">
+                            <i data-lucide="alert-circle"></i>
+                            <span>Analyzing response...</span>
+                        </div>
+                    </div>
+
+                    <!-- Session Details -->
+                    <div class="details-card">
+                        <div class="card-header">
+                            <i data-lucide="clock"></i>
+                            <span>Session Details</span>
+                        </div>
+                        <div class="details-list">
+                            <div class="detail-item">
+                                <span>Duration</span>
+                                <span>~10 minutes</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>Questions</span>
+                                <span>4</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>Interview Type</span>
+                                <span>Technical</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>Language</span>
+                                <span>English</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Capabilities -->
+                    <div class="capabilities-card">
+                        <div class="card-header">
+                            <span>AI Capabilities</span>
+                        </div>
+                        <div class="capabilities-list">
+                            <div class="capability-item">
+                                <i data-lucide="check-circle-2"></i>
+                                <span>Voice Analysis</span>
+                            </div>
+                            <div class="capability-item">
+                                <i data-lucide="check-circle-2"></i>
+                                <span>Emotion Detection</span>
+                            </div>
+                            <div class="capability-item">
+                                <i data-lucide="check-circle-2"></i>
+                                <span>Response Analysis</span>
+                            </div>
+                            <div class="capability-item">
+                                <i data-lucide="check-circle-2"></i>
+                                <span>Bias Detection</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="results-panel" id="results-panel" style="display: none;">
+                <div class="results-card">
+                    <div class="card-header">
+                        <i data-lucide="bar-chart-3"></i>
+                        <span>Interview Results & Analysis</span>
+                    </div>
+                    <p class="results-subtitle">AI-generated evaluation completed in real-time</p>
+                    
+                    <!-- Overall Score -->
+                    <div class="overall-score">
+                        <div class="score-circle">
+                            <span class="score-number">85</span>
+                            <span class="score-total">/100</span>
+                        </div>
+                        <div class="score-details">
+                            <div class="recommendation">Highly Recommended</div>
+                            <div class="confidence">Confidence: 94%</div>
+                        </div>
+                    </div>
+
+                    <!-- Category Scores -->
+                    <div class="category-scores">
+                        <div class="category">
+                            <div class="category-header">
+                                <span>Technical Skills</span>
+                                <span>88%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div class="category">
+                            <div class="category-header">
+                                <span>Communication</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div class="category">
+                            <div class="category-header">
+                                <span>Problem Solving</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="category">
+                            <div class="category-header">
+                                <span>Cultural Fit</span>
+                                <span>86%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 86%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Insights -->
+                    <div class="insights-section">
+                        <h4>Key Insights</h4>
+                        <ul class="insights-list">
+                            <li>
+                                <i data-lucide="check-circle-2"></i>
+                                <span>Strong technical background with excellent problem-solving approach</span>
+                            </li>
+                            <li>
+                                <i data-lucide="check-circle-2"></i>
+                                <span>Clear and confident communication throughout the interview</span>
+                            </li>
+                            <li>
+                                <i data-lucide="check-circle-2"></i>
+                                <span>Demonstrated leadership experience and team collaboration skills</span>
+                            </li>
+                            <li>
+                                <i data-lucide="check-circle-2"></i>
+                                <span>Shows genuine enthusiasm for the role and company mission</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section bg-hero">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Transform Your Interviews?</h2>
+                <p class="cta-description">
+                    Experience the full power of AI-driven recruitment. Start conducting 
+                    smarter interviews today with your free trial.
+                </p>
+                <div class="cta-buttons">
+                    <a href="pricing.html" class="btn btn-secondary btn-lg">Start Free Trial</a>
+                    <a href="about.html" class="btn btn-outline-light btn-lg">Book a Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <i data-lucide="bot"></i>
+                        <span>Matcha AI</span>
+                    </a>
+                    <p class="footer-description">
+                        Revolutionizing recruitment with AI-powered interviews and seamless candidate experiences.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i data-lucide="twitter"></i></a>
+                        <a href="#" class="social-link"><i data-lucide="linkedin"></i></a>
+                        <a href="#" class="social-link"><i data-lucide="github"></i></a>
+                        <a href="#" class="social-link"><i data-lucide="mail"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="demo.html">Demo</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Matcha AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/demo.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+/* Matcha AI Design System - All colors, gradients, fonts, etc defined here */
+
+:root {
+    /* Base colors - Matcha inspired palette */
+    --background: hsl(0, 0%, 100%);
+    --foreground: hsl(155, 25%, 20%);
+
+    --card: hsl(0, 0%, 100%);
+    --card-foreground: hsl(155, 25%, 20%);
+
+    /* Primary - Matcha green */
+    --primary: hsl(142, 36%, 35%);
+    --primary-foreground: hsl(0, 0%, 98%);
+    --primary-light: hsl(142, 36%, 45%);
+    --primary-dark: hsl(142, 36%, 25%);
+
+    /* Secondary - Cream/warm white */
+    --secondary: hsl(45, 25%, 96%);
+    --secondary-foreground: hsl(155, 25%, 20%);
+
+    /* Muted - Light sage */
+    --muted: hsl(142, 20%, 94%);
+    --muted-foreground: hsl(155, 15%, 45%);
+
+    /* Accent - Warm sage */
+    --accent: hsl(142, 25%, 88%);
+    --accent-foreground: hsl(155, 30%, 25%);
+
+    /* Success - Bright matcha */
+    --success: hsl(142, 45%, 40%);
+    --success-foreground: hsl(0, 0%, 98%);
+
+    /* Warning - Tea gold */
+    --warning: hsl(45, 85%, 50%);
+    --warning-foreground: hsl(45, 85%, 10%);
+
+    --destructive: hsl(0, 84.2%, 60.2%);
+    --destructive-foreground: hsl(210, 40%, 98%);
+
+    --border: hsl(142, 20%, 90%);
+    --input: hsl(142, 20%, 96%);
+    --ring: hsl(142, 36%, 35%);
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+    --gradient-hero: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 100%);
+    --gradient-subtle: linear-gradient(180deg, var(--background), var(--muted));
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 16px -4px hsl(142, 36%, 35%, 0.1);
+    --shadow-medium: 0 8px 32px -8px hsl(142, 36%, 35%, 0.15);
+    --shadow-strong: 0 16px 48px -12px hsl(142, 36%, 35%, 0.2);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--foreground);
+    background-color: var(--background);
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Responsive utilities */
+.desktop-only {
+    display: block;
+}
+
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+    
+    .mobile-only {
+        display: block;
+    }
+}
+
+/* Grid systems */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Text styles */
+.text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.section-description {
+    font-size: 1.25rem;
+    color: var(--muted-foreground);
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .section-description {
+        font-size: 1.125rem;
+    }
+    
+    .section-header {
+        margin-bottom: 3rem;
+    }
+}
+
+/* Background variants */
+.bg-hero {
+    background: var(--gradient-hero);
+}
+
+.bg-subtle {
+    background: var(--gradient-subtle);
+}
+
+.bg-muted {
+    background: var(--muted);
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(30px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Card hover effects */
+.card-hover {
+    transition: var(--transition-smooth);
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* Spacing utilities */
+.section {
+    padding: 6rem 0;
+}
+
+@media (max-width: 768px) {
+    .section {
+        padding: 4rem 0;
+    }
+}

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matcha AI - Revolutionize Your Hiring with AI Interviews</title>
+    <meta name="description" content="Transform recruitment with intelligent AI interviews, automated screening, and seamless candidate experiences. Hire better, faster, and smarter with Matcha AI.">
+    <meta name="keywords" content="AI interviews, recruitment, hiring, artificial intelligence, candidate screening, HR tech, talent acquisition">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Matcha AI - AI-Powered Recruitment Platform">
+    <meta property="og:description" content="Revolutionize your hiring process with AI interviews, automated candidate screening, and unbiased evaluation. Join 500+ companies hiring smarter.">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23598F4E'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z'/></svg>">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <i data-lucide="bot"></i>
+                    <span>Matcha AI</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="nav-links desktop-only">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="features.html" class="nav-link">Features</a>
+                    <a href="demo.html" class="nav-link">Demo</a>
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="pricing.html" class="nav-link">Pricing</a>
+                    <a href="about.html" class="nav-link">About</a>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="nav-cta desktop-only">
+                    <a href="login.html" class="btn btn-ghost">Login</a>
+                    <a href="demo.html" class="btn btn-hero">Try Demo</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn mobile-only" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" id="menu-icon"></i>
+                    <i data-lucide="x" id="close-icon" style="display: none;"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div class="mobile-nav" id="mobile-nav">
+                <div class="mobile-nav-links">
+                    <a href="index.html" class="mobile-nav-link">Home</a>
+                    <a href="features.html" class="mobile-nav-link">Features</a>
+                    <a href="demo.html" class="mobile-nav-link">Demo</a>
+                    <a href="dashboard.html" class="mobile-nav-link">Dashboard</a>
+                    <a href="pricing.html" class="mobile-nav-link">Pricing</a>
+                    <a href="about.html" class="mobile-nav-link">About</a>
+                </div>
+                <div class="mobile-nav-cta">
+                    <a href="login.html" class="btn btn-ghost full-width">Login</a>
+                    <a href="demo.html" class="btn btn-hero full-width">Try Demo</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section bg-hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text animate-fade-in-up">
+                    <div class="badge">🚀 AI-Powered Recruitment</div>
+                    <h1 class="hero-title">
+                        Revolutionize Your 
+                        <span class="text-gradient">Hiring Process</span> 
+                        with AI
+                    </h1>
+                    <p class="hero-description">
+                        Transform recruitment with intelligent AI interviews, automated screening, 
+                        and seamless candidate experiences. Hire better, faster, and smarter.
+                    </p>
+                    
+                    <div class="hero-buttons">
+                        <a href="demo.html" class="btn btn-hero btn-lg">
+                            <i data-lucide="play"></i>
+                            Try Demo
+                        </a>
+                        <a href="features.html" class="btn btn-outline btn-lg">
+                            Learn More
+                            <i data-lucide="arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <i data-lucide="star"></i>
+                            <span>4.9/5</span>
+                        </div>
+                        <span class="stat-separator">•</span>
+                        <span>500+ companies</span>
+                        <span class="stat-separator">•</span>
+                        <span>Free trial</span>
+                    </div>
+                </div>
+                
+                <div class="hero-image animate-float">
+                    <img src="assets/hero-image.jpg" alt="AI Interview Dashboard" class="hero-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features for Modern Recruiting</h2>
+                <p class="section-description">
+                    Everything you need to streamline your hiring process and find the perfect candidates
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i data-lucide="bot"></i>
+                    </div>
+                    <h3 class="feature-title">AI Interviews</h3>
+                    <p class="feature-description">
+                        Conduct automated interviews with emotion detection and behavioral analysis
+                    </p>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i data-lucide="clock"></i>
+                    </div>
+                    <h3 class="feature-title">24/7 Availability</h3>
+                    <p class="feature-description">
+                        Interview candidates around the clock without scheduling conflicts
+                    </p>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i data-lucide="bar-chart-3"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Analytics</h3>
+                    <p class="feature-description">
+                        Get detailed insights and unbiased scoring for every candidate
+                    </p>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <h3 class="feature-title">Seamless Onboarding</h3>
+                    <p class="feature-description">
+                        Automate the entire onboarding process from hire to first day
+                    </p>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i data-lucide="message-square"></i>
+                    </div>
+                    <h3 class="feature-title">Ask HR Assistant</h3>
+                    <p class="feature-description">
+                        Instant answers to company policies and employee questions
+                    </p>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i data-lucide="zap"></i>
+                    </div>
+                    <h3 class="feature-title">Quick Integration</h3>
+                    <p class="feature-description">
+                        Connect with your existing tools and workflows seamlessly
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <div class="benefits-content">
+                <div class="benefits-text">
+                    <h2 class="section-title">Why Choose Matcha AI?</h2>
+                    <p class="section-description">
+                        Join hundreds of companies already transforming their hiring process
+                    </p>
+                    
+                    <div class="benefits-list">
+                        <div class="benefit-item">
+                            <i data-lucide="check-circle-2"></i>
+                            <span>Hire 3× faster with automated screening</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i data-lucide="check-circle-2"></i>
+                            <span>Reduce bias with AI-powered evaluation</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i data-lucide="check-circle-2"></i>
+                            <span>Save 80% on recruitment costs</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i data-lucide="check-circle-2"></i>
+                            <span>24/7 candidate engagement</span>
+                        </div>
+                    </div>
+                    
+                    <a href="pricing.html" class="btn btn-hero btn-lg">
+                        Get Started
+                        <i data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Companies</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">10k+</div>
+                        <div class="stat-label">Interviews</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3x</div>
+                        <div class="stat-label">Faster Hiring</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrations Section -->
+    <section class="integrations-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Seamless Integrations</h2>
+                <p class="section-description">
+                    Works with your existing tools and workflows
+                </p>
+            </div>
+            
+            <div class="integrations-list">
+                <div class="integration-item">LinkedIn</div>
+                <div class="integration-item">Slack</div>
+                <div class="integration-item">Teams</div>
+                <div class="integration-item">Gmail</div>
+                <div class="integration-item">Zoom</div>
+                <div class="integration-item">ATS Systems</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section bg-hero">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Transform Your Hiring?</h2>
+                <p class="cta-description">
+                    Join the future of recruitment. Start your free trial today and see the difference AI can make.
+                </p>
+                <div class="cta-buttons">
+                    <a href="demo.html" class="btn btn-secondary btn-lg">Start Free Trial</a>
+                    <a href="about.html" class="btn btn-outline-light btn-lg">Book a Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- Brand -->
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <i data-lucide="bot"></i>
+                        <span>Matcha AI</span>
+                    </a>
+                    <p class="footer-description">
+                        Revolutionizing recruitment with AI-powered interviews and seamless candidate experiences.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i data-lucide="twitter"></i></a>
+                        <a href="#" class="social-link"><i data-lucide="linkedin"></i></a>
+                        <a href="#" class="social-link"><i data-lucide="github"></i></a>
+                        <a href="#" class="social-link"><i data-lucide="mail"></i></a>
+                    </div>
+                </div>
+
+                <!-- Product -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="demo.html">Demo</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Matcha AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
