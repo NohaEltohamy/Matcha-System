@@ -133,18 +133,36 @@ class ForgotPasswordView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            send_password_reset_email(email)
-        # Always return generic success
-        return     Response(data={
-                "success": True,
-                "message": "If this email exists, a password reset link has been sent.",
-                "data": [],
-                "errors": []
-            })
-        
+            if email:
+                res= send_password_reset_email(email)
+                if not res:
+                    # Always return generic success
+                    return     Response(data={
+                            "success": True,
+                            "message": "I a password reset link has been sent.",
+                            "data": [],
+                            "errors": []
+                        })
+                else:
+                    return     Response(data={
+                            "success": False,
+                            "message": "error",
+                            "data": [],
+                            "errors": [res]
+                        })
+
+            else:
+                return     Response(data={
+                        "success": True,
+                        "message": "not exsist email",
+                        "data": [],
+                        "errors": []
+                    })
+                
 class ResetPasswordView(APIView):
     permission_classes = [permissions.AllowAny]
 

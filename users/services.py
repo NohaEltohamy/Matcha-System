@@ -23,10 +23,16 @@ def send_password_reset_email(email: str) -> None:
         f"Click the link to reset your password: {reset_link}\n\n"
         "If you did not request this, please ignore this email."
     )
-    send_mail(
-        subject=subject,
-        message=message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[user.email],
-        fail_silently=True,
-    )
+    
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        # Log/print the error in dev
+        return("Password reset email error:", repr(e))
