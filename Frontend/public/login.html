@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Matcha AI</title>
+    <meta name="description" content="Login to your Matcha AI account and access your recruitment dashboard">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <i data-lucide="bot"></i>
+                <span>Matcha AI</span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="demo.html" class="nav-link">Demo</a>
+                <a href="signup.html" class="nav-link">Sign Up</a>
+            </div>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i data-lucide="menu" id="menu-icon"></i>
+                <i data-lucide="x" id="close-icon" style="display: none;"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobile-nav">
+            <div class="container">
+                <div class="mobile-nav-links">
+                    <a href="index.html" class="mobile-nav-link">Home</a>
+                    <a href="demo.html" class="mobile-nav-link">Demo</a>
+                    <a href="signup.html" class="mobile-nav-link">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="login-header">
+                        <div class="login-icon">
+                            <i data-lucide="log-in"></i>
+                        </div>
+                        <h1>Welcome Back</h1>
+                        <p>Sign in to your Matcha AI account</p>
+                    </div>
+                    
+                    <form class="login-form" id="loginForm">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-wrapper">
+                                <i data-lucide="mail"></i>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email" 
+                                    placeholder="Enter your email"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-wrapper">
+                                <i data-lucide="lock"></i>
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    placeholder="Enter your password"
+                                    required
+                                >
+                                <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                                    <i data-lucide="eye" id="eye-password"></i>
+                                    <i data-lucide="eye-off" id="eye-off-password" style="display: none;"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-options">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="remember" name="remember">
+                                <label for="remember">Remember me</label>
+                            </div>
+                            <a href="#" class="forgot-password">Forgot password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-hero full-width btn-lg">
+                            <i data-lucide="log-in"></i>
+                            Sign In
+                        </button>
+                        
+                        <div class="divider">
+                            <span>or</span>
+                        </div>
+                        
+                        <div class="social-login">
+                            <button type="button" class="btn btn-outline full-width">
+                                <i data-lucide="chrome"></i>
+                                Continue with Google
+                            </button>
+                            <button type="button" class="btn btn-outline full-width">
+                                <i data-lucide="github"></i>
+                                Continue with GitHub
+                            </button>
+                        </div>
+                        
+                        <div class="signup-link">
+                            <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="login-benefits">
+                    <h2>Why Choose Matcha AI?</h2>
+                    <div class="benefits-list">
+                        <div class="benefit-item">
+                            <i data-lucide="check-circle-2"></i>
+                            <span>AI-powered interview automation</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i data-lucide="check-circle-2"></i>
+                            <span>Reduce hiring time by 70%</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i data-lucide="check-circle-2"></i>
+                            <span>Unbiased candidate evaluation</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i data-lucide="check-circle-2"></i>
+                            <span>24/7 recruitment support</span>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial">
+                        <blockquote>
+                            "Matcha AI transformed our hiring process. We're now 3x faster and make better decisions."
+                        </blockquote>
+                        <cite>— Sarah Johnson, HR Director</cite>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <div class="logo">
+                            <i data-lucide="bot"></i>
+                            <span>Matcha AI</span>
+                        </div>
+                        <p>Transform your hiring process with AI-powered recruitment solutions.</p>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="demo.html">Demo</a></li>
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Status</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Matcha AI. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+                    <a href="#" aria-label="GitHub"><i data-lucide="github"></i></a>
+                    <a href="#" aria-label="Email"><i data-lucide="mail"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
