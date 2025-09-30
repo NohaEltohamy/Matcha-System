@@ -96,3 +96,14 @@ class GoogleLoginSerializer(serializers.Serializer):
         attrs['id_token'] = id_token
         attrs['access_token'] = access_token
         return attrs
+
+class ResendVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    
+    def validate_email(self, value):
+        """
+        Validate that email exists in the system
+        """
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("User with this email does not exist.")
+        return value
