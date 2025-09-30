@@ -157,8 +157,15 @@ REST_FRAMEWORK = {
 # Where to build the reset link sent to users
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 # Use console backend for local dev; configure SMTP in production
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'no-reply@example.com')
+# EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'matchasystem@gmail.com')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'matchasystem@gmail.com'
+EMAIL_HOST_PASSWORD = 'qw12QW!@'
+DEFAULT_FROM_EMAIL = 'matchasystem@gmail.com'
 # Expire password reset tokens after 1 hour
 PASSWORD_RESET_TIMEOUT = 3600
 # Google client ID
