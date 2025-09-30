@@ -1,1 +1,108 @@
 Our Feature Branch to be merged to Dev-Branch.
+
+Data Transformation (Input/Output Formatting)
+
+1- Input from Frontend:
+
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "secure123",
+    "password_confirm": "secure123",
+    "phone": "+1234567890"
+}
+
+Frontend sends: // java script
+// Registration request
+const userData = {
+    name: "Jane Smith",
+    email: "jane@example.com", 
+    password: "strongpassword123",
+    password_confirm: "strongpassword123",
+    phone: "+1234567890"
+};
+axios.post('/api/register/', userData)
+
+
+2- Serializer converts to Django model:
+
+User.objects.create(
+    name="John Doe",
+    email="john@example.com",
+    password="hashed_secure123",  # Automatically hashed!
+    phone="+1234567890"
+)
+
+
+3- Output to Frontend:
+
+{
+    "success": true,
+    "message": "User registered successfully",
+    "data": {
+        "id": "uuid-here",
+        "name": "John Doe",
+        "email": "john@example.com",
+        "phone": "+1234567890",
+        "role": "user",
+        "is_verified": false,
+        "avatar": null,  //"https://drive.google.com/uc?export=view&id=..."
+        "created_at": "2024-01-01T00:00:00Z"
+        "updated_at": "2024-01-01T00:00:00Z"
+
+        // No password exposed!
+    },
+    "errors": []
+}
+
+*****************************************************************************************
+Our Folder Structure:
+
+MatchaSystem/
+├── manage.py
+├── requirements.txt
+├── .env
+├── backend/                       # Project directory
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+└── users/                         # Your app
+    ├── __init__.py
+    ├── admin.py
+    ├── apps.py
+    ├── models.py
+    ├── serializers.py            # ← SERIALIZERS HERE
+    ├── views.py
+    ├── urls.py
+    ├── services.py               # Google Drive service
+    ├── utils.py
+    └── migrations/
+        ├── __init__.py
+        └── 0001_initial.py
+
+********************************************************************************
+Using Django Shell for Quick Testing:
+# Start Django shell
+python manage.py shell
+
+# In Django shell
+import requests
+import json
+
+# Test data
+url = "http://localhost:8000/api/users/register/"
+data = {
+    "name": "John Doe",
+    "email": "john@example.com", 
+    "password": "StrongPassword123",
+    "password_confirm": "StrongPassword123",
+    "phone": "+1234567890"
+}
+
+# Make request
+response = requests.post(url, json=data)
+print("Status Code:", response.status_code)
+print("Response JSON:", json.dumps(response.json(), indent=2))
+
