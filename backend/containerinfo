@@ -1,0 +1,19 @@
+#run container for postgres
+docker run --name pg162 \
+  -e POSTGRES_USER=djangouser \
+  -e POSTGRES_PASSWORD=strongpassword \
+  -e POSTGRES_DB=matchasys \
+  -p 5432:5432 \
+  -d postgres:16
+
+#login to  postgres
+docker exec -it pg162 psql -U djangouser -d matchasys
+
+#show running containers
+docker ps
+
+#stop container
+docker stop pg162
+
+#start container
+docker start pg162
