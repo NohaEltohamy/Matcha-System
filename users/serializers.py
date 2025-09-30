@@ -60,7 +60,7 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False, allow_blank=True)
     password = serializers.CharField(write_only=True)
 
-    def validate(self, attrs):
+    def validate(self, attrs):        
         email = attrs.get('email', '').strip()
         password = attrs.get('password')
 
@@ -71,6 +71,8 @@ class LoginSerializer(serializers.Serializer):
         attrs['by_email'] = bool(email)
         attrs['password'] = password
         return attrs
+
+
 class ForgotPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
 

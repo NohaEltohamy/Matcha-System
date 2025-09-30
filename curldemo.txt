@@ -1,7 +1,53 @@
-#Login
+*****************************************************************************************
+Login :
+1- Input from Frontend:
+    {"username":"xx","password":"xx","email":"admin@gmail.com"}
+
+2- Output to Frontend:
+{
+    "success": true,
+    "message": "Login successful",
+    "data": {
+        "id": "78ce4918-be7f-41af-9cab-d285448942eb",
+        "name": "xx",
+        "email": "xx@gmail.com",
+        "phone": null,
+        "role": "user",
+        "is_verified": false,
+        "avatar": null,
+        "created_at": "2025-09-30T09:22:39.196706Z",
+        "updated_at": "2025-09-30T09:22:40.164429Z"
+    },
+    "errors": []
+}
+OR
+  {
+        "success": True,
+        "message": "Invalid credentials.",
+        "data": [],
+        "errors": []
+    }
+OR
+  {
+          "success": True,
+          "message": "User is disabled.",
+          "data": [],
+          "errors": []
+      }
+OR
+{
+        "success": True,
+        "message": "Invalid credentials.",
+        "data": [],
+        "errors": []
+    }
+
 curl -i -c cookies.txt -H "Content-Type: application/json" -X POST \
-  -d '{"username":"alice","password":"secret"}' \
+  -d '{"username":"alice","password":"secret","emaill":"asd@gmail.com"}' \
   http://127.0.0.1:8000/api/auth/login/
+
+
+
 
 #logout
 curl -i -b cookies.txt -X POST http://127.0.0.1:8000/api/auth/logout/

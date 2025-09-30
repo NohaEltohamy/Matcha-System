@@ -69,17 +69,20 @@ class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         login_identifier = serializer.validated_data['login_identifier']
         by_email = serializer.validated_data['by_email']
         password = serializer.validated_data['password']
-
+        print(login_identifier, by_email, password )
         user = None
+        
         if by_email:
             try:
-                u = User.objects.get(email__iexact=login_identifier)
-                user = authenticate(request, username=u.username, password=password)
+                u = User.objects.get(email__iexact=login_identifier)                
+                user = authenticate(request, email=u.email, password=password)
+                
             except User.DoesNotExist:
                 user = None
         else:
