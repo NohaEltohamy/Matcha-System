@@ -81,5 +81,14 @@ Forget Password:
 3- Input from Frontend:
     {"email":"xx@gmail.com"}
 4- Output to Frontend:
-
+  {
+                            "success": True,
+                            "message": "I a password reset link has been sent.",
+                            "data": [],
+                            "errors": []
+                        }
+  OR
+  {"success":false,"message":"error","data":[],"errors":[["Password reset email error:","SMTPAuthenticationError(535, b'5.7.8 Username and Password not accepted. For more information, go to\\n5.7.8  https://support.google.com/mail/?p=BadCredentials ffacd0b85a97d-40fc749b8f9sm21996152f8f.50 - gsmtp')"]]}
 5-curl command
+  curl -X POST http://localhost:9000/api/users/forgot-password/ -H "Content-Type: application/json" -d '{"email":"xx@gmail.com"}'
+
