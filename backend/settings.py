@@ -163,3 +163,11 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'no-reply@example.com')
 PASSWORD_RESET_TIMEOUT = 3600
 # Google client ID
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
+
+# Google Drive Configuration for our Avatar
+GOOGLE_SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, 'service-account-key.json')
+GOOGLE_DRIVE_FOLDER_ID = '1KoGRTjneVb-KdQe43wDiDf1wG3Dvs-OA'  # ← Our Google Shared Folder ID
+
+# File upload settings
+MAX_AVATAR_SIZE = 5 * 1024 * 1024  # 5MB
+ALLOWED_AVATAR_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
