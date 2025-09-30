@@ -107,3 +107,10 @@ response = requests.post(url, json=data)
 print("Status Code:", response.status_code)
 print("Response JSON:", json.dumps(response.json(), indent=2))
 
+****************************************************************************
+Complete Endpoint Summary
+Endpoint	                        Method	 Purpose	                 Request Body	                Success Response
+/api/users/register/	            POST	 User registration	         FormData with avatar or JSON	201 Created
+/api/users/verify-email/	        POST	 Verify email with token	 {"token": "uuid"}	            200 OK
+/api/users/resend-verification/	    POST	 Resend verification email	 {"email": "user@example.com"}	200 OK
+
