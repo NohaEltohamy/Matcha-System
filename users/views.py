@@ -135,8 +135,7 @@ class ForgotPasswordView(APIView):
             email = serializer.validated_data['email']
             send_password_reset_email(email)
         # Always return generic success
-        return 
-                Response(data={
+        return     Response(data={
                 "success": True,
                 "message": "If this email exists, a password reset link has been sent.",
                 "data": [],
@@ -170,8 +169,7 @@ class ResetPasswordView(APIView):
         if PasswordResetTokenGenerator().check_token(user, token):
             user.set_password(new_password)
             user.save()
-            return 
-             Response(data={
+            return Response(data={
                 "success": True,
                 "message": "Password reset successful.",
                 "data": [],
@@ -276,7 +274,7 @@ class GoogleLoginView(APIView):
                 "name": user.name,
                 "email": user.email,
                 "avatar": getattr(user, 'avatar', None),
-            },
+            }},
                     "errors": []
                 })
         
