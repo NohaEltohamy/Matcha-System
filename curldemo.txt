@@ -1,9 +1,13 @@
 *****************************************************************************************
 Login :
-1- Input from Frontend:
+1-EndPoint:
+  /api/users/login/
+2-Method:
+  POST
+3- Input from Frontend:
     {"username":"xx","password":"xx","email":"admin@gmail.com"}
 
-2- Output to Frontend:
+4- Output to Frontend:
 {
     "success": true,
     "message": "Login successful",
@@ -42,12 +46,26 @@ OR
         "errors": []
     }
 
+5-curl command
 curl -i -c cookies.txt -H "Content-Type: application/json" -X POST \
   -d '{"username":"alice","password":"secret","emaill":"asd@gmail.com"}' \
   http://127.0.0.1:8000/api/auth/login/
 
 
-
-
-#logout
-curl -i -b cookies.txt -X POST http://127.0.0.1:8000/api/auth/logout/
+*****************************************************************************************
+logout:
+1-EndPoint:
+  /api/auth/logout/
+2-Method:
+  POST
+3- Input from Frontend:
+    None
+4- Output to Frontend:
+  {
+    "success": true,
+    "message": "Logged out.",
+    "data": [],
+    "errors": []
+}
+5-curl command
+  curl -i -b cookies.txt -X POST http://127.0.0.1:8000/api/auth/logout/

@@ -119,15 +119,15 @@ class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
+        print('in',request)
         logout(request)
-        return 
-        Response(data={
-        "success": True,
-        "message": "Logged out.",
-        "data": [],
-        "errors": []
-    })
-        
+        return Response(data={
+            "success": True,
+            "message": "Logged out.",
+            "data": [],
+            "errors": []
+            })
+            
 
 class ForgotPasswordView(APIView):
     permission_classes = [permissions.AllowAny]
