@@ -88,14 +88,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #     }
 # }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'matchasys',
-        'USER': 'djangouser',
-        'PASSWORD': 'strongpassword',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+     'default': dj_database_url.config(
+        default=os.environ.get("postgresql://postgres:sKMzwXhiaFrvYCDnxwIkbZnZzbCxUcXw@postgres.railway.internal:5432/railway")
+    )
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'matchasys',
+    #     'USER': 'djangouser',
+    #     'PASSWORD': 'strongpassword',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
 }
 
 
