@@ -24,10 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$aquv7puk_xo7&t1k@l2q^9$six0@owkifo187vq&6i)^la)ug'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = ["*", os.environ.get("https://matcha-system-production.up.railway.app/", "")]
+DEBUG = False
+# ALLOWED_HOSTS = []
+# DEBUG = True
 
 # Application definition
 
