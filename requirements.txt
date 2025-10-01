@@ -1,7 +1,7 @@
 annotated-types==0.7.0
 anyio==4.5.2
 appdirs==1.4.3
-apturl==0.5.2
+
 arandr==0.1.10
 asgiref==3.8.1
 attrs==25.3.0
