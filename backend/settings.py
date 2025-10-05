@@ -87,23 +87,30 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+# DATABASE_URL = os.environ.get("postgresql://postgres:sKMzwXhiaFrvYCDnxwIkbZnZzbCxUcXw@maglev.proxy.rlwy.net:43487/railway")
+
+# if DATABASE_URL:
 DATABASES = {
-     'default': dj_database_url.config(
-        default=os.environ.get('postgresql://postgres:sKMzwXhiaFrvYCDnxwIkbZnZzbCxUcXw@postgres.railway.internal:5432/railway'),
+    "default": dj_database_url.config(
+        default=
+        "postgresql://postgres:sKMzwXhiaFrvYCDnxwIkbZnZzbCxUcXw@maglev.proxy.rlwy.net:43487/railway",
         conn_max_age=600,
         ssl_require=True
     )
-     
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'matchasys',
-    #     'USER': 'djangouser',
-    #     'PASSWORD': 'strongpassword',
-    #     'HOST': 'localhost',
-    #     'PORT': '5432',
-    # }
 }
-
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': 'matchasys',
+#             'USER': 'djangouser',
+#             'PASSWORD': 'strongpassword',
+#             'HOST': 'localhost',
+#             'PORT': '5432',
+#         }
+#     }
+     
+   
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -146,11 +153,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# PostgreSQL connection optimization
-DATABASES['default']['CONN_MAX_AGE'] = 500  # Persistent connections
-DATABASES['default']['OPTIONS'] = {
-    'connect_timeout': 5,
-}
+# # PostgreSQL connection optimization
+# DATABASES['default']['CONN_MAX_AGE'] = 500  # Persistent connections
+# DATABASES['default']['OPTIONS'] = {
+#     'connect_timeout': 5,
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
