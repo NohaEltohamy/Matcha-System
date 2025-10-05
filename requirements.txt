@@ -1,3 +1,8 @@
+django-cors-headers==3.13.0
+django-crispy-forms==1.14.0
+
+
+
 django-filter==23.5
 django-model-utils==4.3.1
 djangorestframework==3.14.0
@@ -10,8 +15,6 @@ anyio==4.5.2
 appdirs==1.4.3
 asgiref==3.8.1
 blinker==1.4
-
-
 certifi==2025.8.3
 chardet==3.0.4
 Click==7.0
@@ -23,3 +26,4 @@ cycler==0.10.0
 decorator==5.0.3
 distlib==0.3.0
 distro==1.9.0
+
