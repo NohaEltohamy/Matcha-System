@@ -139,3 +139,4 @@ psycopg2-binary==2.9.9
 protobuf==4.25.3
 idna==3.7
 urllib3==2.2.3
+google-auth==2.41.1
