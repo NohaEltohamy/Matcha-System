@@ -89,8 +89,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # }
 DATABASES = {
      'default': dj_database_url.config(
-        default=os.environ.get("postgresql://postgres:sKMzwXhiaFrvYCDnxwIkbZnZzbCxUcXw@postgres.railway.internal:5432/railway")
+        default=os.environ.get('postgresql://postgres:sKMzwXhiaFrvYCDnxwIkbZnZzbCxUcXw@postgres.railway.internal:5432/railway'),
+        conn_max_age=600,
+        ssl_require=True
     )
+     
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
     #     'NAME': 'matchasys',
