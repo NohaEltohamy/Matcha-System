@@ -14,11 +14,9 @@ asgiref==3.8.1
 blinker==1.4
 certifi==2025.8.3
 chardet==3.0.4
-Click==7.0
 colorama==0.4.3
 contourpy==1.1.1
 crispy-bootstrap5==0.7
-cryptography==2.8
 cycler==0.10.0
 decorator==5.0.3
 distlib==0.3.0
@@ -44,13 +42,11 @@ jiter==0.9.1
 joblib==1.2.0
 kiwisolver==1.3.1
 Mako==1.1.0
-MarkupSafe==1.1.0
 matplotlib==3.7.5
 mechanize==0.4.10
 monotonic==1.5
 more-itertools==4.2.0
 multipledispatch==1.0.0
-networkx==2.5
 oauthlib==3.1.0
 olefile==0.46
 openai==1.82.0
@@ -66,7 +62,6 @@ psycopg2-binary==2.9.9
 pydantic==2.10.6
 pydantic_core==2.27.2
 pyee==11.1.0
-PyJWT==1.7.1
 pyparsing==2.4.7
 PySocks==1.7.1
 pytesseract==0.3.10
@@ -74,9 +69,6 @@ python-dateutil==2.9.0.post0
 pytz==2022.7
 PyWavelets==1.1.1
 pyxdg==0.26
-PyYAML==5.3.1
-scikit-image==0.18.1
-scikit-learn==0.22
 selenium==4.27.1
 simplejson==3.16.0
 six==1.15.0
