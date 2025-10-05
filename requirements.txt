@@ -9,10 +9,17 @@ annotated-types==0.7.0
 anyio==4.5.2
 appdirs==1.4.3
 asgiref==3.8.1
+blinker==1.4
 
 
-
-attrs==25.3.0
-backports.zoneinfo==0.2.1
-bcrypt==3.1.7
-beautifulsoup4==4.12.3
+certifi==2025.8.3
+chardet==3.0.4
+Click==7.0
+colorama==0.4.3
+contourpy==1.1.1
+crispy-bootstrap5==0.7
+cryptography==2.8
+cycler==0.10.0
+decorator==5.0.3
+distlib==0.3.0
+distro==1.9.0
