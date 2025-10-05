@@ -51,7 +51,6 @@ monotonic==1.5
 more-itertools==4.2.0
 multipledispatch==1.0.0
 networkx==2.5
-numpy==1.22.0
 oauthlib==3.1.0
 olefile==0.46
 openai==1.82.0
@@ -78,7 +77,6 @@ pyxdg==0.26
 PyYAML==5.3.1
 scikit-image==0.18.1
 scikit-learn==0.22
-scipy==1.6.2
 selenium==4.27.1
 simplejson==3.16.0
 six==1.15.0
