@@ -108,3 +108,4 @@ websocket-client==1.8.0
 whitenoise==6.2.0
 wsproto==1.2.0
 zipp==3.19.2
+dj-database-url==3.0.1
