@@ -1,7 +1,7 @@
 # job_board/models.py
 
 from django.db import models
-from users.models import User
+from django.contrib.auth import get_user_model # Added this import
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 
