@@ -92,3 +92,29 @@ Forget Password:
 5-curl command
   curl -X POST http://localhost:9000/api/users/forgot-password/ -H "Content-Type: application/json" -d '{"email":"xx@gmail.com"}'
 
+********************  JOBS  *********************************
+Create a Job Post (must logged as Recruiter ):
+Permissions: Only recruiter users can create.
+1-EndPoint:
+  /api/jobs/
+2-Method:
+  POST
+3- Input from Frontend:
+  #in header 
+  -H "X-CSRFToken: <your_csrftoken_here>"
+  ==============================
+    {
+        "title": "Senior Python Developer",
+        "description": "Develop robust backend services using Python and Django.",
+        "skills": ["Python", "Django", "DRF", "PostgreSQL", "AWS"],
+        "status": "draft"
+      }
+4- Output to Frontend:
+  {
+    "success": true,
+    "message": "Logged out.",
+    "data": [],
+    "errors": []
+}
+5-curl command
+  curl -i -b cookies.txt -X POST http://127.0.0.1:8000/api/auth/logout/

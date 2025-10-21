@@ -1,0 +1,172 @@
+Job Postings API Endpoints Summary:
+    1. Create a Job Post
+    Endpoint: POST /api/jobs/
+    Purpose: Allows a recruiter to create a new job posting. The recruiter field is automatically set to the logged-in user.
+    Permissions: IsRecruiterOrAdmin (Only users with the "recruiter" role can create).
+    Example Request:
+        POST /api/jobs/
+        Content-Type: application/json
+        Authorization: Bearer <your_token_or_session>
+
+        {
+    "title": "Backend Engineer",
+    "description": "Seeking a skilled Backend Engineer to develop and maintain robust server-side applications.",
+    "skills": [
+        "Python",
+        "Django",
+        "SQL",
+        "REST APIs",
+        "Git"
+    ],
+    "status": "draft"
+}
+    Example Response (201 Created): {
+    "id": 101,
+    "title": "Backend Engineer",
+    "description": "Seeking a skilled Backend Engineer to develop and maintain robust server-side applications.",
+    "skills": [
+        "Python",
+        "Django",
+        "SQL",
+        "REST APIs",
+        "Git"
+    ],
+    "status": "draft",
+    "opened_at": null,
+    "closed_at": null,
+    "recruiter": 5,
+    "recruiter_username": "recruiter_alice",
+    "created_at": "2023-10-27T15:00:00.000000Z",
+    "updated_at": "2023-10-27T15:00:00.000000Z"
+}
+2. List All Job Posts
+Endpoint: GET /api/jobs/
+Purpose: Retrieves a list of all job postings. Can be filtered by recruiter ID or status.
+Permissions: IsRecruiterOrAdmin (Admins see all jobs; Recruiters typically see their own jobs, or all 'open' jobs depending on get_queryset logic).
+Example Request (No Filters):
+    GET /api/jobs/
+    Authorization: Bearer <your_token_or_session>
+Example Request (Filtered by Status):
+    GET /api/jobs/?status=open
+    Authorization: Bearer <your_token_or_session>
+Example Response (200 OK - filtered list): [
+    {
+        "id": 101,
+        "title": "Backend Engineer",
+        "description": "Seeking a skilled Backend Engineer to develop and maintain robust server-side applications.",
+        "skills": [
+            "Python",
+            "Django",
+            "SQL",
+            "REST APIs",
+            "Git"
+        ],
+        "status": "draft",
+        "opened_at": null,
+        "closed_at": null,
+        "recruiter": 5,
+        "recruiter_username": "recruiter_alice",
+        "created_at": "2023-10-27T15:00:00.000000Z",
+        "updated_at": "2023-10-27T15:00:00.000000Z"
+    }
+]
+3. Retrieve a Specific Job Post
+    Endpoint: GET /api/jobs/<id>/
+    Purpose: Fetches details for a single job posting by its ID.
+    Permissions: IsOwnerOrAdmin (Admins can view any job; Recruiters can view their own jobs).
+    Example Request:
+        GET /api/jobs/101/
+        Authorization: Bearer <your_token_or_session>
+    Example Response (200 OK): {
+    "id": 101,
+    "title": "Backend Engineer",
+    "description": "Seeking a skilled Backend Engineer to develop and maintain robust server-side applications.",
+    "skills": [
+        "Python",
+        "Django",
+        "SQL",
+        "REST APIs",
+        "Git"
+    ],
+    "status": "draft",
+    "opened_at": null,
+    "closed_at": null,
+    "recruiter": 5,
+    "recruiter_username": "recruiter_alice",
+    "created_at": "2023-10-27T15:00:00.000000Z",
+    "updated_at": "2023-10-27T15:00:00.000000Z"
+}
+4. Update a Job Post (Partial Update)
+Endpoint: PATCH /api/jobs/<id>/
+Purpose: Allows the owner recruiter or an admin to partially update fields of a job posting.
+Permissions: IsOwnerOrAdmin (Only the recruiter who created the job or an admin can update).
+Example Request:
+    PATCH /api/jobs/101/
+Content-Type: application/json
+Authorization: Bearer <your_token_or_session>
+
+{
+    "status": "open",
+    "skills": [
+        "Python",
+        "Django",
+        "SQL",
+        "REST APIs",
+        "Git",
+        "Docker"
+    ]
+}
+Example Response (200 OK): {
+    "id": 101,
+    "title": "Backend Engineer",
+    "description": "Seeking a skilled Backend Engineer to develop and maintain robust server-side applications.",
+    "skills": [
+        "Python",
+        "Django",
+        "SQL",
+        "REST APIs",
+        "Git",
+        "Docker"
+    ],
+    "status": "open",
+    "opened_at": "2023-10-27T15:30:00.000000Z", // Automatically updated
+    "closed_at": null,
+    "recruiter": 5,
+    "recruiter_username": "recruiter_alice",
+    "created_at": "2023-10-27T15:00:00.000000Z",
+    "updated_at": "2023-10-27T15:30:00.000000Z" // Automatically updated
+}
+5. Delete a Job Post
+Endpoint: DELETE /api/jobs/<id>/
+Purpose: Deletes a job posting by its ID.
+Permissions: IsOwnerOrAdmin (Only the recruiter who created the job or an admin can delete).
+Example Request:
+    DELETE /api/jobs/101/
+    Authorization: Bearer <your_token_or_session>
+Example Response (204 No Content):
+(No response body)
+6. Get AI Job Suggestions
+Endpoint: POST /api/jobs/suggest-description/
+Purpose: Generates a suggested job description and required skills based on a provided job title using the AI integration.
+Permissions: IsRecruiterOrAdmin (Only users with the "recruiter" role or admins can access).
+Example Request:
+    POST /api/jobs/suggest-description/
+    Content-Type: application/json
+    Authorization: Bearer <your_token_or_session>
+
+    {
+    "title": "Cloud Solutions Architect"
+}
+Example Response (200 OK): {
+    "description": "We are seeking a highly skilled and experienced Cloud Solutions Architect to design, implement, and manage scalable cloud infrastructure. The ideal candidate will have deep expertise in cloud platforms and a strong understanding of enterprise architecture principles.",
+    "skills": [
+        "AWS",
+        "Azure",
+        "Google Cloud",
+        "Cloud Architecture",
+        "Microservices",
+        "Networking",
+        "Security",
+        "DevOps"
+    ]
+}
