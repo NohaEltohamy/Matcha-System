@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     # 'users',  # Add my app here
-    'jobs.apps.JobConfig',
+    'jobs.apps.JobsConfig',
     'users.apps.UsersConfig',
 ]
 
