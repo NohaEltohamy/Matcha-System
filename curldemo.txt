@@ -5,7 +5,7 @@ Login :
 2-Method:
   POST
 3- Input from Frontend:
-    {"username":"xx","password":"xx","email":"admin@gmail.com"}
+    {"password":"xx","email":"admin@gmail.com"}
 
 4- Output to Frontend:
 {
