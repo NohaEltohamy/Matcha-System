@@ -29,6 +29,7 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
         ('user', 'User'),
+        ('recruiter', 'Recruiter'),
         ('admin', 'Admin'),
         ('moderator', 'Moderator'),
     ]
@@ -57,6 +58,26 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def __str__(self):
         return self.email
+    
+    def is_recruiter(self):
+        """Check if user is a recruiter"""
+        return self.role == 'recruiter'
+    
+    def is_admin(self):
+        """Check if user is an admin"""
+        return self.role == 'admin'
+    
+    def is_moderator(self):
+        """Check if user is a moderator"""
+        return self.role == 'moderator'
+    
+    def can_manage_job_postings(self):
+        """Check if user can manage job postings"""
+        return self.role in ['recruiter', 'admin', 'moderator']
+    
+    def can_review_job_postings(self):
+        """Check if user can review job postings"""
+        return self.role in ['admin', 'moderator']
 
 class EmailVerificationToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -66,3 +87,5 @@ class EmailVerificationToken(models.Model):
     
     def is_expired(self):
         return timezone.now() > self.expires_at
+
+

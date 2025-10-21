@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'users',  # Add my app here
+    # 'users',  # Add my app here
+    'job.apps.JobConfig',
+    'users.apps.UsersConfig',
 ]
 
 AUTH_USER_MODEL = 'users.User'  # Custom user model
@@ -190,6 +192,9 @@ GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
 # Google Drive Configuration for our Avatar
 GOOGLE_SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, 'service-account-key.json')
 GOOGLE_DRIVE_FOLDER_ID = '1KoGRTjneVb-KdQe43wDiDf1wG3Dvs-OA'  # ← Our Google Shared Folder ID
+
+# Gemini AI Configuration
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
 # File upload settings
 MAX_AVATAR_SIZE = 5 * 1024 * 1024  # 5MB
