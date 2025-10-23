@@ -7,7 +7,13 @@ from .models import Job
 from .serializers import JobSerializer
 from .permissions import IsRecruiterOrAdmin, IsOwnerOrAdmin # Using IsOwnerOrAdmin for object-level permissions
 from .utils import generate_job_suggestions # Import the helper function
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')  
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
@@ -39,7 +45,7 @@ class JobViewSet(viewsets.ModelViewSet):
             permission_classes = [IsRecruiterOrAdmin] # Default for other actions
 
         return [permission() for permission in permission_classes]
-
+    @method_decorator(csrf_exempt, name='dispatch')  
     def perform_create(self, serializer):
         
         if self.request.user.is_authenticated:
@@ -54,6 +60,7 @@ class JobViewSet(viewsets.ModelViewSet):
                 # For demonstration, let's assume it exists or you handle this.
                 raise Exception("Default anonymous_user not found. Please create one.")
             serializer.save(recruiter=default_recruiter)
+    
     @action(detail=False, methods=['post'], url_path='suggest-description')
     def suggest_job_description(self, request):
         """

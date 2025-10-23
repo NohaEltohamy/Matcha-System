@@ -1,9 +1,11 @@
 # job_board/urls.py
 
 from rest_framework.routers import DefaultRouter
-from .views import JobViewSet
+from .views import *
+from django.urls import path
 
-router = DefaultRouter()
-router.register(r'jobs', JobViewSet)
 
-urlpatterns = router.urls
+
+urlpatterns = [
+    # path('jobs/post/', post_job_simple, name='post-job'),
+]
