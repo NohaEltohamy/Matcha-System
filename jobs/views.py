@@ -75,7 +75,7 @@ def post_job(request):
 #genai generate job description
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def generate_job_description_only(request):
+def generate_job_description_skills(request):
     """
     API endpoint to generate job description and skills only (without creating job)
     Useful for previewing AI suggestions before creating the job
