@@ -51,7 +51,7 @@ OR
 5-curl command
 curl -i -c cookies.txt -H "Content-Type: application/json" -X POST \
   -d '{"username":"alice","password":"secret","emaill":"asd@gmail.com"}' \
-  http://127.0.0.1:8000/api/auth/login/
+  http://127.0.0.1:8000/api/users/login/
 
 
 *****************************************************************************************
@@ -70,7 +70,7 @@ logout:
     "errors": []
 }
 5-curl command
-  curl -i -b cookies.txt -X POST http://127.0.0.1:8000/api/auth/logout/
+  curl -i -b cookies.txt -X POST http://127.0.0.1:8000/api/users/logout/
 
 
 
