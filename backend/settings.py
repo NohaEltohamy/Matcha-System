@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',  # Add CORS headers
     # 'users',  # Add my app here
     'jobs.apps.JobsConfig',
     'users.apps.UsersConfig',
@@ -51,6 +52,7 @@ AUTH_USER_MODEL = 'users.User'  # Custom user model
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Add CORS middleware at the top
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -200,3 +202,40 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 # File upload settings
 MAX_AVATAR_SIZE = 5 * 1024 * 1024  # 5MB
 ALLOWED_AVATAR_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React development server
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",  # Vite development server
+    "http://127.0.0.1:5173",
+]
+
+# Allow all origins in development (remove in production)
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Allow credentials (cookies, authorization headers)
+CORS_ALLOW_CREDENTIALS = True
+
+# Allow specific headers
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# Allow specific methods
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
