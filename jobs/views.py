@@ -20,6 +20,7 @@ from .serializers import JobSerializer
 User = get_user_model()
 
 
+#job post
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def post_job(request):
@@ -67,6 +68,57 @@ def post_job(request):
         return Response({
             "success": False,
             "message": "Failed to create job",
+            "data": None,
+            "errors": [str(e)]
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+#genai generate job description
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def generate_job_description_only(request):
+    """
+    API endpoint to generate job description and skills only (without creating job)
+    Useful for previewing AI suggestions before creating the job
+    """
+    
+    # Step 1: Validate input
+    job_title = request.data.get('title')
+    if not job_title:
+        return Response({
+            "success": False,
+            "message": "Job title is required",
+            "data": None,
+            "errors": ["title_required"]
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Step 2: Check if logged user is recruiter
+    if not request.user.is_recruiter():
+        return Response({
+            "success": False,
+            "message": "Only recruiters can generate job descriptions",
+            "data": None,
+            "errors": ["insufficient_permissions"]
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    # Step 3: Generate AI suggestions
+    try:
+        ai_suggestions = generate_job_suggestions(job_title)
+        
+        return Response({
+            "success": True,
+            "message": f"AI suggestions generated for '{job_title}'",
+            "data": {
+                "title": job_title,
+                "suggested_description": ai_suggestions.get('description', ''),
+                "suggested_skills": ai_suggestions.get('skills', [])
+            },
+            "errors": []
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response({
+            "success": False,
+            "message": "Failed to generate job description",
             "data": None,
             "errors": [str(e)]
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
