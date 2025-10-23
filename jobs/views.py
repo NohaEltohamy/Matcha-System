@@ -123,6 +123,67 @@ def generate_job_description_skills(request):
             "errors": [str(e)]
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#job list
+# Add this after your existing functions, before the JobViewSet class
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_recruiter_jobs(request):
+    """
+    API endpoint to list jobs for the logged-in recruiter
+    Query parameters:
+    - status: filter by job status (open, closed, draft)
+    - search: search in title and description
+    """
+    # Step 1: Check if logged user is recruiter
+    if not request.user.is_recruiter():
+        return Response({
+            "success": False,
+            "message": "Only recruiters can view job lists",
+            "data": None,
+            "errors": ["insufficient_permissions"]
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        # Start with jobs for the logged-in recruiter
+        queryset = Job.objects.filter(recruiter=request.user)
+        
+        # Apply status filter
+        status_filter = request.GET.get('status')
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        
+        # Apply search filter
+        search_query = request.GET.get('search')
+        if search_query:
+            from django.db.models import Q
+            queryset = queryset.filter(
+                Q(title__icontains=search_query) | 
+                Q(description__icontains=search_query)
+            )
+        
+        # Apply ordering (newest first)
+        queryset = queryset.order_by('-created_at')
+        
+        # Serialize the data
+        serializer = JobSerializer(queryset, many=True)
+        
+        return Response({
+            "success": True,
+            "message": f"Found {queryset.count()} jobs for {request.user.username}",
+            "data": serializer.data,
+            "errors": []
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response({
+            "success": False,
+            "message": "Failed to retrieve jobs",
+            "data": None,
+            "errors": [str(e)]
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        
 @method_decorator(csrf_exempt, name='dispatch')  
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
