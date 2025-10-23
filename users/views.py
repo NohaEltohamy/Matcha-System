@@ -342,7 +342,7 @@ class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        
+        print('in login view')
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         login_identifier = serializer.validated_data['login_identifier']

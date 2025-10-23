@@ -40,11 +40,20 @@ class JobViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in permission_classes]
 
-
     def perform_create(self, serializer):
-        # Automatically assign the logged-in user as the recruiter
-        serializer.save(recruiter=self.request.user)
-
+        
+        if self.request.user.is_authenticated:
+                serializer.save(recruiter=self.request.user)
+        else:
+            # Assign a default recruiter for unauthenticated users
+            # You must have a user in your database with this username or ID
+            try:
+                default_recruiter = User.objects.create(username='anonymous_user') # Or by ID, e.g., pk=1
+            except User.DoesNotExist:
+                # Handle case where default user doesn't exist (e.g., create it or raise an error)
+                # For demonstration, let's assume it exists or you handle this.
+                raise Exception("Default anonymous_user not found. Please create one.")
+            serializer.save(recruiter=default_recruiter)
     @action(detail=False, methods=['post'], url_path='suggest-description')
     def suggest_job_description(self, request):
         """

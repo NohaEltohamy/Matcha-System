@@ -12,9 +12,9 @@ def generate_job_suggestions(title: str) -> dict:
     # --- Configuration for your AI API ---
     # Replace with your actual Gemini API endpoint and API key
     GEMINI_API_URL = os.environ.get("GEMINI_API_URL", "https://api.gemini.com/v1/completions")
-    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY") # Store securely, e.g., in environment variables
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyDKp4bMo8-Br-iHGMAIe0EpHn-xmk2LcYw") # Store securely, e.g., in environment variables
 
-    if GEMINI_API_KEY == "YOUR_GEMINI_API_KEY":
+    if GEMINI_API_KEY == "AIzaSyDKp4bMo8-Br-iHGMAIe0EpHn-xmk2LcYw":
         print("WARNING: Gemini API Key is not set. Using mock suggestions.")
         # Fallback to mock suggestions if API key is not configured
         return _generate_mock_suggestions(title)
@@ -37,7 +37,7 @@ def generate_job_suggestions(title: str) -> dict:
 
     # Assuming a simple request body structure for a completion API
     data = {
-        "model": "text-davinci-003", # Replace with the actual Gemini model you intend to use (e.g., "gemini-pro")
+        "model": "gemini-2.5-flash",
         "prompt": prompt,
         "max_tokens": 500,
         "temperature": 0.7,
