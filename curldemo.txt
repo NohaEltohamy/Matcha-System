@@ -12,6 +12,7 @@ Login :
     "success": true,
     "message": "Login successful",
     "data": {
+      "user":{
         "id": "78ce4918-be7f-41af-9cab-d285448942eb",
         "name": "xx",
         "email": "xx@gmail.com",
@@ -22,6 +23,7 @@ Login :
         "created_at": "2025-09-30T09:22:39.196706Z",
         "updated_at": "2025-09-30T09:22:40.164429Z"
     },
+    "csrf_token":"asasasw4h4j3h34k"},
     "errors": []
 }
 OR

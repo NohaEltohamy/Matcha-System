@@ -3,6 +3,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.middleware.csrf import get_token
 from rest_framework import status,permissions
 from rest_framework.decorators import api_view,parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -380,10 +381,14 @@ class LoginView(APIView):
            
 
         login(request, user)
+        csrf_token = get_token(request)
         return Response(data={
         "success": True,
         "message": "Login successful",
-        "data": UserSerializer(user).data,
+        "data": {
+            "user": UserSerializer(user).data,
+            "csrf_token": csrf_token
+        },
         "errors": []
     })
        
