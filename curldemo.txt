@@ -1,12 +1,12 @@
 *****************************************************************************************
 Login :
 1-EndPoint:
-  /api/users/login/
+  http://41.33.119.70:2335/api/users/login/
 2-Method:
   POST
 3- Input from Frontend:
     {"password":"xx","email":"admin@gmail.com"}
-
+users
 4- Output to Frontend:
 {
     "success": true,
