@@ -205,10 +205,10 @@ ALLOWED_AVATAR_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React development server
-    "http://127.0.0.1:3000",
-    "http://localhost:5173",  # Vite development server
-    "http://127.0.0.1:5173",
+    
+    "http://127.0.0.1:8000",
+    "http://41.33.119.70:2335",
+    
 ]
 
 # Allow all origins in development (remove in production)
