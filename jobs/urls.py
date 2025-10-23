@@ -5,7 +5,6 @@ from .views import *
 from django.urls import path
 
 
-
 urlpatterns = [
-    # path('jobs/post/', post_job_simple, name='post-job'),
+    path('jpost/', post_job, name='post-job'),
 ]

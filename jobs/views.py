@@ -9,9 +9,67 @@ from .permissions import IsRecruiterOrAdmin, IsOwnerOrAdmin # Using IsOwnerOrAdm
 from .utils import generate_job_suggestions # Import the helper function
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import get_user_model
+from .models import Job
+from .serializers import JobSerializer
+
+User = get_user_model()
 
 
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def post_job(request):
+    """
+    API endpoint to post a new job
+    Steps:
+    1. Validate data
+    2. Check if logged user is recruiter
+    3. Store recruiter who posted the job
+    """
+    # Step 1: Validate data
+    serializer = JobSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response({
+            "success": False,
+            "message": "Invalid job data",
+            "data": None,
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Step 2: Check if logged user is recruiter
+    if not request.user.is_recruiter():
+        return Response({
+            "success": False,
+            "message": "Only recruiters can post jobs",
+            "data": None,
+            "errors": ["insufficient_permissions"]
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    # Step 3: Store recruiter who posted the job
+    try:
+        # Create the job with the authenticated recruiter
+        job = serializer.save(recruiter=request.user)
+        
+        # Return success response with job data
+        job_data = JobSerializer(job).data
+        return Response({
+            "success": True,
+            "message": "Job posted successfully",
+            "data": job_data,
+            "errors": []
+        }, status=status.HTTP_201_CREATED)
+        
+    except Exception as e:
+        return Response({
+            "success": False,
+            "message": "Failed to create job",
+            "data": None,
+            "errors": [str(e)]
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @method_decorator(csrf_exempt, name='dispatch')  
 class JobViewSet(viewsets.ModelViewSet):
