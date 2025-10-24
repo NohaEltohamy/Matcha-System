@@ -3,8 +3,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Job
-from .serializers import JobSerializer
+from .models import Job, CV, CandidateJobMatch
+from .serializers import JobSerializer, CVSerializer, CandidateJobMatchSerializer
 from .permissions import IsRecruiterOrAdmin, IsOwnerOrAdmin # Using IsOwnerOrAdmin for object-level permissions
 from .utils import generate_job_suggestions # Import the helper function
 from django.utils.decorators import method_decorator
@@ -247,3 +247,98 @@ class JobViewSet(viewsets.ModelViewSet):
 
         suggestions = generate_job_suggestions(title)
         return Response(suggestions, status=status.HTTP_200_OK)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def evaluate_cv_by_genai(request):
+    """
+    API endpoint to evaluate a CV against a job using GenAI
+    Required fields:
+    - cv_id: ID of the CV to evaluate
+    - job_id: ID of the job to match against
+    """
+    # Step 1: Check if logged user is recruiter or admin
+    if not (request.user.is_recruiter() or request.user.is_staff):
+        return Response({
+            "success": False,
+            "message": "Only recruiters and admins can evaluate CVs",
+            "data": None,
+            "errors": ["insufficient_permissions"]
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    # Step 2: Validate required fields
+    cv_id = request.data.get('cv_id')
+    job_id = request.data.get('job_id')
+    
+    if not cv_id or not job_id:
+        return Response({
+            "success": False,
+            "message": "Both cv_id and job_id are required",
+            "data": None,
+            "errors": ["cv_id_and_job_id_required"]
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        # Step 3: Get CV and Job objects
+        try:
+            cv = CV.objects.get(id=cv_id)
+            job = Job.objects.get(id=job_id)
+        except CV.DoesNotExist:
+            return Response({
+                "success": False,
+                "message": "CV not found",
+                "data": None,
+                "errors": ["cv_not_found"]
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Job.DoesNotExist:
+            return Response({
+                "success": False,
+                "message": "Job not found",
+                "data": None,
+                "errors": ["job_not_found"]
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        # Step 4: Generate AI evaluation
+        ai_evaluation = generate_cv_evaluation(cv, job)
+        
+        # Step 5: Create or update CandidateJobMatch
+        match, created = CandidateJobMatch.objects.get_or_create(
+            cv=cv,
+            job=job,
+            defaults={
+                'genai_score': ai_evaluation['genai_score'],
+                'skills_match_score': ai_evaluation['skills_match_score'],
+                'experience_match_score': ai_evaluation['experience_match_score'],
+                'overall_fit_score': ai_evaluation['overall_fit_score'],
+                'ai_analysis': ai_evaluation['ai_analysis'],
+            }
+        )
+        
+        # If match already exists, update it
+        if not created:
+            match.genai_score = ai_evaluation['genai_score']
+            match.skills_match_score = ai_evaluation['skills_match_score']
+            match.experience_match_score = ai_evaluation['experience_match_score']
+            match.overall_fit_score = ai_evaluation['overall_fit_score']
+            match.ai_analysis = ai_evaluation['ai_analysis']
+            match.save()
+        
+        # Step 6: Serialize and return the result
+        serializer = CandidateJobMatchSerializer(match)
+        
+        return Response({
+            "success": True,
+            "message": f"CV evaluated successfully. GenAI Score: {ai_evaluation['genai_score']}%",
+            "data": serializer.data,
+            "errors": []
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response({
+            "success": False,
+            "message": "Failed to evaluate CV",
+            "data": None,
+            "errors": [str(e)]
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
