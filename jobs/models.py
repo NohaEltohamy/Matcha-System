@@ -56,3 +56,42 @@ class Job(models.Model):
             self.closed_at = None
 
         super().save(*args, **kwargs)
+
+
+# Add these models after your existing Job model
+class CV(models.Model):
+    """Model to store candidate CVs"""
+    candidate = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="cvs"
+    )
+    title = models.CharField(max_length=255)  # Job title the CV is for
+    file_url = models.URLField()  # URL to the CV file (e.g., Google Drive, S3)
+    file_name = models.CharField(max_length=255)
+    file_size = models.IntegerField()  # File size in bytes
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ["-uploaded_at"]
+    
+    def __str__(self):
+        return f"{self.candidate.name} - {self.title}"
+
+class CandidateJobMatch(models.Model):
+    """Model to store AI-generated scores for candidate-job matches"""
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name="job_matches")
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="candidate_matches")
+    genai_score = models.FloatField(default=0.0)  # AI-generated compatibility score (0-100)
+    skills_match_score = models.FloatField(default=0.0)  # Skills compatibility score
+    experience_match_score = models.FloatField(default=0.0)  # Experience compatibility score
+    overall_fit_score = models.FloatField(default=0.0)  # Overall fit score
+    ai_analysis = models.TextField(blank=True, null=True)  # Detailed AI analysis
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = ['cv', 'job']  # One score per CV-Job combination
+        ordering = ["-genai_score"]
+    
+    def __str__(self):
+        return f"{self.cv.candidate.name} - {self.job.title} ({self.genai_score}%)"
