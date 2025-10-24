@@ -11,8 +11,7 @@ def generate_job_suggestions(title: str) -> dict:
     Generates AI-suggested job description and skills based on the job title
     by sending a prompt to a completion API (e.g., Gemini).
     """
-    # --- Configuration for your AI API ---
-   
+    # --- Configuration for your AI API ---   
     if GEMINI_API_KEY == "AIzaSyDKp4bMo8-Br-iHGMAIe0EpHn-xmk2LcYw":
         print("WARNING: Gemini API Key is not set. Using mock suggestions.")
         # Fallback to mock suggestions if API key is not configured

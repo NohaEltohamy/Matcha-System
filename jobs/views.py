@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Job, CV, CandidateJobMatch
 from .serializers import JobSerializer, CVSerializer, CandidateJobMatchSerializer
 from .permissions import IsRecruiterOrAdmin, IsOwnerOrAdmin # Using IsOwnerOrAdmin for object-level permissions
-from .utils import generate_job_suggestions # Import the helper function
+from .utils import generate_job_suggestions,generate_cv_evaluation # Import the helper function
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
@@ -247,6 +247,102 @@ class JobViewSet(viewsets.ModelViewSet):
 
         suggestions = generate_job_suggestions(title)
         return Response(suggestions, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_matched_cvs(request):
+    """
+    API endpoint to list candidate CVs filtered by job title and ordered by genai_score
+    Query parameters:
+    - job_title: filter CVs by job title (required)
+    - min_score: minimum genai_score threshold (optional, default: 0)
+    - limit: maximum number of results (optional, default: 50)
+    """
+    # Step 1: Check if logged user is recruiter or admin
+    if not (request.user.is_recruiter() or request.user.is_staff):
+        return Response({
+            "success": False,
+            "message": "Only recruiters and admins can view candidate CVs",
+            "data": None,
+            "errors": ["insufficient_permissions"]
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    # Step 2: Validate required parameters
+    job_title = request.GET.get('job_title')
+    if not job_title:
+        return Response({
+            "success": False,
+            "message": "job_title parameter is required",
+            "data": None,
+            "errors": ["job_title_required"]
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        # Step 3: Get optional parameters
+        min_score = float(request.GET.get('min_score', 0))
+        limit = int(request.GET.get('limit', 50))
+        
+        # Step 4: Find jobs matching the title
+        matching_jobs = Job.objects.filter(
+            Q(title__icontains=job_title) | 
+            Q(description__icontains=job_title)
+        )
+        
+        if not matching_jobs.exists():
+            return Response({
+                "success": True,
+                "message": f"No jobs found matching '{job_title}'",
+                "data": [],
+                "errors": []
+            }, status=status.HTTP_200_OK)
+        
+        # Step 5: Get candidate matches for these jobs, ordered by genai_score
+        candidate_matches = CandidateJobMatch.objects.filter(
+            job__in=matching_jobs,
+            genai_score__gte=min_score
+        ).select_related(
+            'cv', 'cv__candidate', 'job'
+        ).order_by('-genai_score')[:limit]
+        
+        # Step 6: Serialize the data
+        serializer = CandidateJobMatchSerializer(candidate_matches, many=True)
+        
+        # Step 7: Prepare response data with statistics
+        response_data = {
+            "candidate_matches": serializer.data,
+            "statistics": {
+                "total_matches": candidate_matches.count(),
+                "job_title_searched": job_title,
+                "matching_jobs_count": matching_jobs.count(),
+                "min_score_threshold": min_score,
+                "average_score": sum(match.genai_score for match in candidate_matches) / len(candidate_matches) if candidate_matches else 0,
+                "highest_score": candidate_matches[0].genai_score if candidate_matches else 0,
+            }
+        }
+        
+        return Response({
+            "success": True,
+            "message": f"Found {candidate_matches.count()} candidate matches for '{job_title}'",
+            "data": response_data,
+            "errors": []
+        }, status=status.HTTP_200_OK)
+        
+    except ValueError as e:
+        return Response({
+            "success": False,
+            "message": "Invalid parameter values",
+            "data": None,
+            "errors": [str(e)]
+        }, status=status.HTTP_400_BAD_REQUEST)
+        
+    except Exception as e:
+        return Response({
+            "success": False,
+            "message": "Failed to retrieve candidate CVs",
+            "data": None,
+            "errors": [str(e)]
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
