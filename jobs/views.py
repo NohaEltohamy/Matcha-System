@@ -16,6 +16,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from .models import Job
 from .serializers import JobSerializer
+from django.db.models import Q
 
 User = get_user_model()
 
