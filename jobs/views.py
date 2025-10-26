@@ -345,8 +345,6 @@ def list_matched_cvs(request):
             "errors": [str(e)]
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def evaluate_cv_by_genai(request):
@@ -436,6 +434,88 @@ def evaluate_cv_by_genai(request):
         return Response({
             "success": False,
             "message": "Failed to evaluate CV",
+            "data": None,
+            "errors": [str(e)]
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def show_cv_by_id(request, cv_id):
+    """
+    API endpoint to show CV details by ID
+    Accessible by:
+    - CV owner (the candidate who uploaded the CV)
+    - Recruiters only (not admins)
+    """
+    try:
+        # Step 1: Get the CV object
+        try:
+            cv = CV.objects.select_related('candidate').get(id=cv_id)
+        except CV.DoesNotExist:
+            return Response({
+                "success": False,
+                "message": "CV not found",
+                "data": None,
+                "errors": ["cv_not_found"]
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        # Step 2: Check permissions
+        # Allow access if:
+        # - User is the CV owner (candidate)
+        # - User is a recruiter (but not admin/staff)
+        is_cv_owner = cv.candidate == request.user
+        is_recruiter = request.user.is_recruiter() and not request.user.is_staff
+        
+        if not (is_cv_owner or is_recruiter):
+            return Response({
+                "success": False,
+                "message": "You don't have permission to view this CV. Only CV owners and recruiters can access this.",
+                "data": None,
+                "errors": ["insufficient_permissions"]
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        # Step 3: Get related job matches for this CV (if user is recruiter)
+        job_matches = []
+        if is_recruiter:
+            job_matches = CandidateJobMatch.objects.filter(
+                cv=cv
+            ).select_related('job', 'job__recruiter').order_by('-genai_score')
+        
+        # Step 4: Serialize CV data
+        cv_serializer = CVSerializer(cv)
+        
+        # Step 5: Prepare response data
+        response_data = {
+            "cv": cv_serializer.data,
+            "permissions": {
+                "is_cv_owner": is_cv_owner,
+                "is_recruiter": is_recruiter,
+                "can_view_matches": is_recruiter
+            }
+        }
+        
+        # Step 6: Add job matches if user is recruiter
+        if is_recruiter:
+            matches_serializer = CandidateJobMatchSerializer(job_matches, many=True)
+            response_data["job_matches"] = matches_serializer.data
+            response_data["statistics"] = {
+                "total_matches": job_matches.count(),
+                "average_score": sum(match.genai_score for match in job_matches) / len(job_matches) if job_matches else 0,
+                "highest_score": job_matches[0].genai_score if job_matches else 0,
+                "lowest_score": job_matches[len(job_matches)-1].genai_score if job_matches else 0,
+            }
+        
+        return Response({
+            "success": True,
+            "message": f"CV details retrieved successfully",
+            "data": response_data,
+            "errors": []
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response({
+            "success": False,
+            "message": "Failed to retrieve CV details",
             "data": None,
             "errors": [str(e)]
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
