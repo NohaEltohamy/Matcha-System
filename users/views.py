@@ -381,13 +381,15 @@ class LoginView(APIView):
            
 
         login(request, user)
+        token, created = Token.objects.get_or_create(user=user)
         csrf_token = get_token(request)
         return Response(data={
         "success": True,
         "message": "Login successful",
         "data": {
             "user": UserSerializer(user).data,
-            "csrf_token": csrf_token
+            "csrf_token": csrf_token,
+            "token": token.key  
         },
         "errors": []
     })
