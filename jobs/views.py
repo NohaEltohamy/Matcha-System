@@ -519,3 +519,5 @@ def show_cv_by_id(request, cv_id):
             "data": None,
             "errors": [str(e)]
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+

@@ -95,3 +95,35 @@ class CandidateJobMatch(models.Model):
     
     def __str__(self):
         return f"{self.cv.candidate.name} - {self.job.title} ({self.genai_score}%)"
+
+# Add this at the end of your models.py file
+
+class Interview(models.Model):
+    """Model to store scheduled interviews"""
+    STATUS_CHOICES = [
+        ("scheduled", "Scheduled"),
+        ("completed", "Completed"),
+        ("cancelled", "Cancelled"),
+        ("no_show", "No Show"),
+    ]
+    
+    candidate = models.ForeignKey(User, on_delete=models.CASCADE, related_name="interviews")
+    recruiter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="scheduled_interviews")
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="interviews")
+    cv = models.ForeignKey(CV, on_delete=models.SET_NULL, null=True, blank=True, related_name="interviews")
+    scheduled_at = models.DateTimeField()
+    duration_minutes = models.IntegerField(default=30)
+    interview_type = models.CharField(max_length=50, default="technical")
+    meeting_link = models.URLField(blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
+    ai_prompt = models.TextField(blank=True, null=True)  # AI-generated interview questions
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="scheduled")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ["-scheduled_at"]
+    
+    def __str__(self):
+        return f"Interview: {self.candidate.name} - {self.job.title} ({self.scheduled_at})"
