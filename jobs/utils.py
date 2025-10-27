@@ -232,3 +232,210 @@ def _generate_mock_cv_evaluation(cv, job):
         "ai_analysis": analysis.strip()
     }
 
+
+#interview
+# Add this function to your utils.py file after the _generate_mock_cv_evaluation function
+
+def generate_interview_prompt(candidate, job, interview_type="technical"):
+    """
+    Generates AI interview prompt/questions for a scheduled interview
+    Returns a dictionary with interview questions and guidance
+    """
+    
+    if GEMINI_API_KEY == "AIzaSyDKp4bMo8-Br-iHGMAIe0EpHn-xmk2LcYw":
+        print("WARNING: Gemini API Key is not set. Using mock interview prompt.")
+        return _generate_mock_interview_prompt(candidate, job, interview_type)
+    
+    # Construct the prompt for interview questions generation
+    prompt = f"""
+    Generate a comprehensive interview prompt and questions for a {interview_type} interview.
+    
+    JOB POSTING:
+    Title: {job.title}
+    Description: {job.description}
+    Required Skills: {', '.join(job.skills) if job.skills else 'Not specified'}
+    
+    CANDIDATE:
+    Name: {candidate.name}
+    
+    Please provide a JSON response with the following structure:
+    {{
+        "interview_prompt": "Introduction and overview of the interview process...",
+        "questions": [
+            {{
+                "question": "Sample question about experience?",
+                "category": "experience",
+                "expected_answer_points": "Key points to look for"
+            }}
+        ],
+        "evaluation_criteria": "What to look for in answers",
+        "interview_tips": "Tips for conducting the interview",
+        "duration_estimate": 30
+    }}
+    
+    Generate 5-8 relevant {interview_type} questions based on the job requirements.
+    """
+    
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {GEMINI_API_KEY}"
+    }
+    
+    data = {
+        "model": "gemini-2.5-flash",
+        "prompt": prompt,
+        "max_tokens": 1500,
+        "temperature": 0.5,
+    }
+    
+    try:
+        response = requests.post(GEMINI_API_URL, headers=headers, json=data, timeout=20)
+        response.raise_for_status()
+        
+        completion_response = response.json()
+        
+        if "choices" in completion_response and completion_response["choices"]:
+            generated_text = completion_response["choices"][0].get("text", "")
+            try:
+                interview_data = json.loads(generated_text)
+                return interview_data
+            except (json.JSONDecodeError, ValueError) as e:
+                print(f"Failed to decode JSON from AI response: {generated_text}")
+                return _generate_mock_interview_prompt(candidate, job, interview_type)
+        else:
+            return _generate_mock_interview_prompt(candidate, job, interview_type)
+            
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return _generate_mock_interview_prompt(candidate, job, interview_type)
+
+
+def _generate_mock_interview_prompt(candidate, job, interview_type):
+    """
+    Helper function for mock interview prompt when AI API is not configured or fails.
+    """
+    import random
+    
+    questions = []
+    
+    if interview_type == "technical":
+        questions = [
+            {
+                "question": f"Tell me about your experience with {', '.join(job.skills[:3]) if job.skills else 'the required technologies'}.",
+                "category": "technical",
+                "expected_answer_points": "Look for proficiency in key technologies, real-world applications, problem-solving examples"
+            },
+            {
+                "question": "Describe a challenging project you worked on and how you overcame obstacles.",
+                "category": "problem-solving",
+                "expected_answer_points": "Problem identification, approach taken, solutions implemented, lessons learned"
+            },
+            {
+                "question": "How do you stay updated with the latest technologies in your field?",
+                "category": "learning",
+                "expected_answer_points": "Continuous learning habits, specific resources, practical application of new knowledge"
+            },
+            {
+                "question": "Walk me through how you would approach solving [describe a relevant technical problem].",
+                "category": "problem-solving",
+                "expected_answer_points": "Methodology, critical thinking, technical knowledge, practical approach"
+            }
+        ]
+    elif interview_type == "behavioral":
+        questions = [
+            {
+                "question": "Tell me about a time when you had to work under pressure. How did you handle it?",
+                "category": "pressure",
+                "expected_answer_points": "Stress management, time management, team collaboration, results achieved"
+            },
+            {
+                "question": "Describe a situation where you had to resolve a conflict with a team member.",
+                "category": "collaboration",
+                "expected_answer_points": "Conflict resolution approach, communication skills, empathy, outcome"
+            },
+            {
+                "question": "What motivates you in your work?",
+                "category": "motivation",
+                "expected_answer_points": "Personal drive, alignment with company values, growth mindset"
+            },
+            {
+                "question": "Can you give an example of a time you had to learn something new quickly?",
+                "category": "adaptability",
+                "expected_answer_points": "Learning ability, willingness to adapt, problem-solving under pressure"
+            }
+        ]
+    else:
+        # Mix of both
+        questions = [
+            {
+                "question": f"Why are you interested in this {job.title} position?",
+                "category": "motivation",
+                "expected_answer_points": f"Alignment with {job.title} role, career goals, passion for the work"
+            },
+            {
+                "question": "Tell me about a relevant project from your experience.",
+                "category": "experience",
+                "expected_answer_points": "Technical depth, problem-solving, results achieved, lessons learned"
+            },
+            {
+                "question": "How do you handle feedback and criticism?",
+                "category": "growth",
+                "expected_answer_points": "Openness to feedback, ability to adapt, growth mindset"
+            }
+        ]
+    
+    interview_prompt = f"""
+    Welcome to the interview for the {job.title} position at our company.
+    
+    TODAY'S AGENDA:
+    We'll discuss your experience, skills in {', '.join(job.skills[:5]) if job.skills else 'relevant technologies'}, and how you can contribute to our team.
+    
+    STRUCTURE:
+    - Introduction (5 minutes)
+    - Technical/Behavioral Questions (20 minutes)
+    - Your Questions (5 minutes)
+    
+    Let's begin with a brief introduction about yourself and your background.
+    """
+    
+    evaluation_criteria = f"""
+    EVALUATION CRITERIA FOR {job.title}:
+    
+    1. Technical Competence (40%)
+       - Proficiency in required skills
+       - Problem-solving ability
+       - Practical experience with relevant technologies
+    
+    2. Communication Skills (20%)
+       - Clarity of expression
+       - Ability to explain technical concepts
+       - Listening and understanding
+    
+    3. Cultural Fit (20%)
+       - Alignment with company values
+       - Team collaboration
+       - Growth mindset
+    
+    4. Relevant Experience (20%)
+       - Past projects and achievements
+       - Industry knowledge
+       - Practical application of skills
+    """
+    
+    interview_tips = f"""
+    INTERVIEW TIPS FOR {interview_type.upper()} INTERVIEW:
+    
+    1. Create a comfortable environment for open discussion
+    2. Focus on assessing practical skills and problem-solving
+    3. Ask follow-up questions based on candidate's responses
+    4. Observe communication style and team fit
+    5. Provide clear feedback about next steps after the interview
+    """
+    
+    return {
+        "interview_prompt": interview_prompt.strip(),
+        "questions": questions,
+        "evaluation_criteria": evaluation_criteria.strip(),
+        "interview_tips": interview_tips.strip(),
+        "duration_estimate": 30
+    }

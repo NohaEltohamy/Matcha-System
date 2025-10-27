@@ -3,10 +3,10 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Job, CV, CandidateJobMatch
-from .serializers import JobSerializer, CVSerializer, CandidateJobMatchSerializer
+from .models import Job, CV, CandidateJobMatch,Interview
+from .serializers import JobSerializer, CVSerializer, CandidateJobMatchSerializer,InterviewSerializer
 from .permissions import IsRecruiterOrAdmin, IsOwnerOrAdmin # Using IsOwnerOrAdmin for object-level permissions
-from .utils import generate_job_suggestions,generate_cv_evaluation # Import the helper function
+from .utils import generate_job_suggestions,generate_cv_evaluation,generate_interview_prompt # Import the helper function
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
@@ -521,3 +521,136 @@ def show_cv_by_id(request, cv_id):
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+# Add this view function to your views.py file
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def schedule_interview(request):
+    """
+    API endpoint to schedule an interview with AI-generated prompts
+    Required fields:
+    - candidate_id: ID of the candidate
+    - job_id: ID of the job
+    - scheduled_at: Datetime in ISO format
+    - interview_type: Type of interview (technical, behavioral, etc.)
+    Optional fields:
+    - cv_id: ID of the CV
+    - duration_minutes: Duration of interview (default: 30)
+    - meeting_link: Video call link
+    - location: Physical location
+    - notes: Additional notes
+    """
+    # Step 1: Check if logged user is recruiter or admin
+    if not (request.user.is_recruiter() or request.user.is_staff):
+        return Response({
+            "success": False,
+            "message": "Only recruiters and admins can schedule interviews",
+            "data": None,
+            "errors": ["insufficient_permissions"]
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    # Step 2: Validate required fields
+    candidate_id = request.data.get('candidate_id')
+    job_id = request.data.get('job_id')
+    scheduled_at = request.data.get('scheduled_at')
+    interview_type = request.data.get('interview_type', 'technical')
+    
+    if not candidate_id or not job_id or not scheduled_at:
+        return Response({
+            "success": False,
+            "message": "candidate_id, job_id, and scheduled_at are required",
+            "data": None,
+            "errors": ["missing_required_fields"]
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        # Step 3: Parse scheduled_at datetime
+        from datetime import datetime
+        scheduled_datetime = datetime.fromisoformat(scheduled_at.replace('Z', '+00:00'))
+        
+        # Step 4: Get objects
+        try:
+            candidate = User.objects.get(id=candidate_id)
+            job = Job.objects.get(id=job_id)
+            cv = None
+            if request.data.get('cv_id'):
+                cv = CV.objects.get(id=request.data.get('cv_id'))
+        except User.DoesNotExist:
+            return Response({
+                "success": False,
+                "message": "Candidate not found",
+                "data": None,
+                "errors": ["candidate_not_found"]
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Job.DoesNotExist:
+            return Response({
+                "success": False,
+                "message": "Job not found",
+                "data": None,
+                "errors": ["job_not_found"]
+            }, status=status.HTTP_404_NOT_FOUND)
+        except CV.DoesNotExist:
+            return Response({
+                "success": False,
+                "message": "CV not found",
+                "data": None,
+                "errors": ["cv_not_found"]
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        # Step 5: Generate AI interview prompt
+        ai_prompt_data = generate_interview_prompt(candidate, job, interview_type)
+        ai_prompt_text = json.dumps(ai_prompt_data)
+        
+        # Step 6: Create interview
+        interview_data = {
+            'candidate': candidate.id,
+            'recruiter': request.user.id,
+            'job': job.id,
+            'scheduled_at': scheduled_datetime,
+            'duration_minutes': request.data.get('duration_minutes', 30),
+            'interview_type': interview_type,
+            'meeting_link': request.data.get('meeting_link', ''),
+            'location': request.data.get('location', ''),
+            'notes': request.data.get('notes', ''),
+            'ai_prompt': ai_prompt_text,
+            'cv': cv.id if cv else None,
+            'status': 'scheduled'
+        }
+        
+        serializer = InterviewSerializer(data=interview_data)
+        if serializer.is_valid():
+            interview = serializer.save()
+            
+            # Step 7: Return response with AI prompt
+            response_data = InterviewSerializer(interview).data
+            response_data['ai_prompt_data'] = ai_prompt_data
+            
+            return Response({
+                "success": True,
+                "message": "Interview scheduled successfully",
+                "data": response_data,
+                "errors": []
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response({
+                "success": False,
+                "message": "Invalid interview data",
+                "data": None,
+                "errors": serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+    except ValueError as e:
+        return Response({
+            "success": False,
+            "message": "Invalid datetime format. Use ISO format.",
+            "data": None,
+            "errors": [str(e)]
+        }, status=status.HTTP_400_BAD_REQUEST)
+        
+    except Exception as e:
+        return Response({
+            "success": False,
+            "message": "Failed to schedule interview",
+            "data": None,
+            "errors": [str(e)]
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
