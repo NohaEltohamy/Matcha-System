@@ -1,0 +1,40 @@
+#schedule-interview
+
+POST /api/jobs/schedule-interview/
+{
+    "candidate_id": "uuid-of-candidate",
+    "job_id": 1,
+    "cv_id": 1,
+    "scheduled_at": "2024-01-20T10:00:00Z",
+    "interview_type": "technical",
+    "duration_minutes": 45,
+    "meeting_link": "https://meet.google.com/xxx-yyyy-zzz",
+    "notes": "Focus on Python and Django experience"
+}
+
+Resonse 
+{
+    "success": true,
+    "message": "Interview scheduled successfully",
+    "data": {
+        "id": 1,
+        "candidate_name": "John Doe",
+        "job_title": "Python Developer",
+        "scheduled_at": "2024-01-20T10:00:00Z",
+        "interview_type": "technical",
+        "ai_prompt_data": {
+            "interview_prompt": "Welcome to the interview...",
+            "questions": [
+                {
+                    "question": "Tell me about your experience with Python",
+                    "category": "technical",
+                    "expected_answer_points": "..."
+                }
+            ],
+            "evaluation_criteria": "...",
+            "interview_tips": "...",
+            "duration_estimate": 30
+        }
+    },
+    "errors": []
+}

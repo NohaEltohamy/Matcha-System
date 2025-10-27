@@ -16,7 +16,7 @@ urlpatterns = [
     path('matched-cvs/', list_matched_cvs, name='list-matched-cvs'),  # Add this line
     path('evaluate-cv/', evaluate_cv_by_genai, name='evaluate-cv-by-genai'),  # Add this line
     path('cv/<int:cv_id>/', show_cv_by_id, name='show-cv-by-id'),  # Add this line
-   
+   path('schedule-interview/', schedule_interview, name='schedule-interview'),  # Add this line
     
   # Include router URLs
 ] + router.urls
