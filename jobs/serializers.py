@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 from .models import Job
-from .models import Job, CV, CandidateJobMatch
+from .models import Job, CV, CandidateJobMatch,Interview
 
 class JobSerializer(serializers.ModelSerializer):
     recruiter_username = serializers.CharField(source='recruiter.username', read_only=True)
@@ -84,3 +84,36 @@ class CandidateJobMatchSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+class InterviewSerializer(serializers.ModelSerializer):
+    candidate_name = serializers.CharField(source='candidate.name', read_only=True)
+    candidate_email = serializers.CharField(source='candidate.email', read_only=True)
+    recruiter_name = serializers.CharField(source='recruiter.name', read_only=True)
+    recruiter_email = serializers.CharField(source='recruiter.email', read_only=True)
+    job_title = serializers.CharField(source='job.title', read_only=True)
+    
+    class Meta:
+        model = Interview
+        fields = [
+            "id",
+            "candidate",
+            "candidate_name",
+            "candidate_email",
+            "recruiter",
+            "recruiter_name",
+            "recruiter_email",
+            "job",
+            "job_title",
+            "cv",
+            "scheduled_at",
+            "duration_minutes",
+            "interview_type",
+            "meeting_link",
+            "location",
+            "notes",
+            "ai_prompt",
+            "status",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["created_at", "updated_at"]
