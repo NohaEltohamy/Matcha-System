@@ -31,6 +31,7 @@ from google.auth.transport import requests as google_requests
 from .serializers import GoogleLoginSerializer
 from .services import google_drive_service
 import logging
+from rest_framework.authtoken.models import Token  # Add this if not already imported
 
 logger = logging.getLogger(__name__)
 
